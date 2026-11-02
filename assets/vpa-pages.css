@@ -28,3 +28,4 @@ footer a{color:#bbb}footer .fl{display:flex;flex-wrap:wrap;justify-content:cente
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.tile{display:block;border:1px solid var(--ln);border-radius:12px;padding:18px;text-decoration:none;color:#fff;background:var(--nv2)}.tile:hover{border-color:#fff}.tile b{display:block;font-style:italic;text-transform:uppercase;font-size:1.1rem;margin-bottom:4px}.tile span{color:var(--mut);font-size:.9rem}
 .lvlbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end}.lvlbox .big{font-size:3.2rem;line-height:1}
 @media(max-width:600px){header.vh{padding:10px 14px}header.vh img{height:30px}}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}

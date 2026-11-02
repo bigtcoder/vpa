@@ -112,7 +112,7 @@
         team_a_id: m.a, team_b_id: m.b, team_a1: tcfg[m.a].players[0], team_a2: tcfg[m.a].players[1], team_b1: tcfg[m.b].players[0], team_b2: tcfg[m.b].players[1], scheduled_at: m.scheduled_at || null, predicted_a: +m.pA.toFixed(3) }));
       const m = await sb.from('matches').insert(rows); if (m.error) throw m.error; done(e.data.id); }
   } catch (e) { orgNote.textContent = e.message; start.disabled = false; } };
-  function done(id) { const u = location.origin + '/event/?id=' + id; orgNote.innerHTML = vt('saved') + ' <a href="' + u + '">' + u + '</a>'; }
+  function done(id) { const u = new URL('../event/?id=' + id, location.href).href; orgNote.innerHTML = vt('saved') + ' <a href="' + u + '">' + u + '</a>'; }
   document.addEventListener('vpa-lang', () => { draw(); renderS(); if (lastT) tgen_(); });
   draw();
 })();
