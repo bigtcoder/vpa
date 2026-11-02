@@ -1,9 +1,9 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Find my level · VPA</title><meta name="description" content="Enter any rating you have — DUPR, PVNA, VDPR and more — and see your VPA level and where you rank in Vietnam.">
-<link rel="icon" href="../assets/favicon.svg?v=202611021916" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon.svg?v=202611031930" type="image/svg+xml">
 
-<link rel="stylesheet" href="../assets/vpa-pages.css?v=202611021916"></head><body>
-<header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611021916" alt="VPA"></a><nav><a href="../events/" data-i18n="navEv">Events</a><a href="../results/" data-i18n="navRes">Results</a><a href="../ranking/" class="on" data-i18n="navRk">Rankings</a><a href="../about/" data-i18n="navAb">About</a></nav><button id="langBtn">VI</button></header>
+<link rel="stylesheet" href="../assets/vpa-pages.css?v=202611031930"></head><body>
+<header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611031930" alt="VPA"></a><nav><a href="../events/" data-i18n="navEv">Events</a><a href="../results/" data-i18n="navRes">Results</a><a href="../ranking/" class="on" data-i18n="navRk">Rankings</a><a href="../about/" data-i18n="navAb">About</a></nav><button id="langBtn">VI</button></header>
 <main>
 <h1 data-i18n="h">Find my level</h1>
 <p data-i18n="intro">Pick your rating app and type your rating. Your result appears instantly.</p>
@@ -26,7 +26,7 @@ conf:"How sure we are",yourR:"Your rating",strong:"Using your strongest rating:"
 vi:{h:"Xem trình của tôi",intro:"Chọn ứng dụng điểm trình và nhập điểm. Kết quả hiện ngay.",lGender:"Tôi thi đấu nội dung",male:"Nam",female:"Nữ",lFmt:"Đánh đơn thay vì đôi?",dbl:"Đôi",sgl:"Đơn",add:"+ Tôi có điểm khác",empty:"Nhập ít nhất một điểm trình.",
 moreH:"Trình của tôi ở các ứng dụng khác?",disc:"Đây là ước tính dựa trên dữ liệu công khai, không phải điểm chính thức của hệ thống nào. Sẽ được tinh chỉnh khi có thêm kết quả thi đấu VPA.",sys:"Hệ thống",rat:"Điểm",lvl:"Trình VPA của bạn",range:"Khoảng có thể",rk:"Thứ hạng tại Việt Nam",of:"trên",men:"nam",wom:"nữ",top:"top",divs:"Bạn có thể thi đấu",none:"Chưa có hạng phù hợp — hỏi BTC.",
 conf:"Mức chắc chắn",yourR:"Điểm của bạn",strong:"Dùng điểm cao nhất của bạn:",eq:"Trình tương đương ở",yours:"từ điểm của bạn",high:"cao",medium:"trung bình",low:"thấp",rel:"DUPR tin cậy (reliability ≥ 60%)",sglNote:"Trình được xây dựng từ dữ liệu đánh đôi; kết quả đơn kém chính xác hơn.",rm:"Xoá",eligible:"Đủ điều kiện",provisional:"Có thể được",needs_check:"BTC sẽ kiểm tra",div:"Mức trình",srcH:"Nguồn dữ liệu",ns:"Chưa hỗ trợ",fullRk:"Xem bảng xếp hạng"}};</script>
-<script src="../assets/vpa-i18n.js?v=202611021916"></script><script src="../assets/vpa-conversion.js?v=202611021916"></script><script src="../assets/vpa-rank.js?v=202611021916"></script>
+<script src="../assets/vpa-i18n.js?v=202611031930"></script><script src="../assets/vpa-conversion.js?v=202611031930"></script><script src="../assets/vpa-rank.js?v=202611031930"></script>
 <script>
 let P; const f2=x=>(+x).toFixed(2), SYS=['DUPR','PVNA','VDPR','PICKNA','LOOL','SPORTCONNECT','UTRP','VAIR','IPTPA','WPR','SELF'], CAPS=[2.5,3.0,3.5,4.0,4.5,5.0];
 function addRow(sys='DUPR',val=''){const d=document.createElement('div');d.className='row inp';d.innerHTML='<div><label>'+vt('sys')+'</label><select class="s">'+SYS.map(s=>'<option value="'+s+'"'+(s===sys?' selected':'')+'>'+P.systems[s].label+'</option>').join('')+'</select></div><div><label>'+vt('rat')+'</label><input class="r" type="number" step="0.01" min="0" max="16" inputmode="decimal" value="'+val+'"></div><div class="relw"><label><input type="checkbox" class="rel" checked> '+vt('rel')+'</label></div><div><button class="b g rm">'+vt('rm')+'</button></div>';

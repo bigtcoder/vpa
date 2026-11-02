@@ -130,7 +130,7 @@
     const r1 = []; for (let i = 0; i < N; i += 2) r1.push({ slot: `${pre}-R1-${i / 2 + 1}`, a: qual[ord[i] - 1] || null, b: qual[ord[i + 1] - 1] || null, seedA: ord[i], seedB: ord[i + 1] });
     if (o.poolOf) { const pl = x => x && o.poolOf[x]; // avoid same-pool meetings in round 1 by swapping lower seeds
       for (let i = 0; i < r1.length; i++) if (pl(r1[i].a) && pl(r1[i].a) === pl(r1[i].b))
-        for (let j = 0; j < r1.length; j++) { if (j === i) continue; const A = r1[i], B = r1[j];
+        for (let j = 0; j < r1.length; j++) { if (j === i || !r1[j].a || !r1[j].b) continue; const A = r1[i], B = r1[j]; // never swap with a bye match: byes stay with the top seeds
           if (pl(A.a) !== pl(B.b) && pl(B.a) !== pl(A.b)) { [A.b, B.b] = [B.b, A.b]; [A.seedB, B.seedB] = [B.seedB, A.seedB]; break; } } }
     R.push(r1); let prev = r1, k = 2;
     while (prev.length > 1) { const nx = []; for (let i = 0; i < prev.length; i += 2) nx.push({ slot: `${pre}-R${k}-${i / 2 + 1}`, srcA: prev[i].slot, srcB: prev[i + 1].slot, a: null, b: null });
