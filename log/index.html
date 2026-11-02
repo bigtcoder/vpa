@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>VPA Organiser Log · VPA</title>
+<link rel="icon" href="../assets/favicon.svg?v=202611030036" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@100..125,400..900&display=swap&subset=vietnamese" rel="stylesheet">
+<link rel="stylesheet" href="../assets/vpa-pages.css?v=202611030036"></head><body>
+<header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611030036" alt="VPA – Vietnam Pickleball Asia"></a><nav><a href="../ranking/" data-i18n="navRk">Ranking</a><a href="../level/" data-i18n="navLv">Check your level</a><a href="../events/" data-i18n="navEv">Events</a><a href="../generate/" data-i18n="navTt">Tournament tools</a><a href="../privacy/" data-i18n="navPv">Privacy</a></nav><button id="langBtn">VI</button></header>
+<main><h1 data-i18n="h">VPA <span>Organiser log</span></h1>
+<div id="msg"></div>
+<div class="card" id="auth"><label data-i18n="em">Organiser email</label><div class="row"><input id="email" type="email"><button class="b o" id="send" data-i18n="send">Send magic link</button></div><p class="note" data-i18n="authNote">Only emails on the VPA organisers list can save results.</p></div>
+<div id="app" class="hide">
+<div class="card"><div class="row">
+ <div><label data-i18n="ev">Event</label><select id="ev"></select></div><div><label data-i18n="newEv">…or new event name</label><input id="evNew"></div>
+ <div><label data-i18n="dv">Division</label><select id="dv"><option>VPA 2.0–2.5</option><option>VPA 2.5–3.0</option><option>VPA 3.0–3.5</option><option>Open</option></select></div>
+ <div><label data-i18n="dt">Date</label><input id="dt" type="date"></div>
+ <div><label data-i18n="fm">Format</label><select id="fm"><option value="doubles" data-i18n="dbl">Doubles</option><option value="singles" data-i18n="sgl">Singles</option></select></div>
+</div></div>
+<div class="row"><div class="card" id="teamA"></div><div class="card" id="teamB"></div></div>
+<div class="card"><h3 data-i18n="gm">Games</h3><div class="row"><div><label data-i18n="to">Play to</label><input id="to" type="number" value="11"></div><div><label data-i18n="wb">Win by</label><input id="wb" type="number" value="1"></div></div>
+ <div id="games"></div><button class="b g" id="addG" data-i18n="addG">+ Game</button>
+ <label data-i18n="rf">Referee</label><input id="rf"></div>
+<button class="b o" id="save" data-i18n="save">Save match</button> <span id="sv" class="note"></span>
+<div class="card"><h3 data-i18n="exH">Export for upload</h3><div class="row"><div><label data-i18n="ev">Event</label><select id="exEv"></select></div>
+ <div><label data-i18n="sys">System</label><select id="exSys"><option value="DUPR_JSON">DUPR – partner API JSON</option><option value="DUPR_CSV">DUPR – club CSV fields</option><option>PVNA</option><option>VDPR</option><option value="UTRP">UTR-P</option><option value="SPORTCONNECT">Sport Connect</option><option>LOOL</option><option value="ALL">VPA – all systems</option></select></div>
+ <div><button class="b" id="exBtn" data-i18n="dl">Download</button></div></div><p class="note" id="exNote"></p></div>
+</div></main><footer><div class="fl"><a href="../ranking/" data-i18n="navRk">Ranking</a><a href="../level/" data-i18n="navLv">Check your level</a><a href="../events/" data-i18n="navEv">Events</a><a href="../results/" data-i18n="navRes">Results</a><a href="../generate/" data-i18n="navTt">Tournament tools</a><a href="../log/" data-i18n="navLog">Organiser log</a><a href="../privacy/" data-i18n="navPv">Privacy</a></div><span data-i18n="ftTag">VPA — Vietnam Pickleball Asia</span></footer>
+<datalist id="plist"></datalist>
+<script>window.VPA_I18N={en:{nRes:"Results",nGen:"Game generator",nc:"Logging not connected yet — Supabase is not configured for this site.",notOrg:"Signed in, but this email is not on the organisers list.",sent:"Check your email for the sign-in link.",
+pl:"Player",search:"Search existing or type new name",g:"Gender",sys:"System",rat:"Rating",pid:"Profile URL / ID",addR:"+ rating",ta:"Team A",tb:"Team B",saved:"Saved ✓",bad:"Check scores: each game needs a winner reaching the target and winning by the margin.",need:"Event and players are required.",
+nDUPR_JSON:"Matches DUPR's documented partner match-create JSON (requires DUPR partner API access; players need DUPR IDs).",nDUPR_CSV:"DUPR's club CSV template is only downloadable inside DUPR (Clubs → Matches → Import via CSV). These columns hold the documented fields; copy them into the downloaded template. Every player needs a DUPR ID.",
+nGEN:"No documented bulk-upload format for this system: generic CSV for manual entry / sending to the system's admins. See upload-paths."},
+vi:{nRes:"Kết quả",nGen:"Tạo lịch đấu",h:"VPA <span>Nhập kết quả (BTC)</span>",em:"Email BTC",send:"Gửi link đăng nhập",authNote:"Chỉ email trong danh sách BTC VPA mới lưu được kết quả.",ev:"Giải",newEv:"…hoặc tên giải mới",dv:"Hạng",dt:"Ngày",fm:"Nội dung",dbl:"Đôi",sgl:"Đơn",
+gm:"Ván đấu",to:"Điểm ván",wb:"Cách biệt",addG:"+ Ván",rf:"Trọng tài",save:"Lưu trận",exH:"Xuất file để tải lên",dl:"Tải về",nc:"Chưa kết nối hệ thống ghi kết quả — chưa cấu hình Supabase.",notOrg:"Đã đăng nhập nhưng email không có trong danh sách BTC.",sent:"Kiểm tra email để lấy link đăng nhập.",
+pl:"VĐV",search:"Tìm VĐV hoặc nhập tên mới",g:"Giới tính",sys:"Hệ thống",rat:"Điểm",pid:"Link / ID hồ sơ",addR:"+ điểm",ta:"Đội A",tb:"Đội B",saved:"Đã lưu ✓",bad:"Kiểm tra tỉ số: mỗi ván phải có đội đạt điểm ván và hơn đủ cách biệt.",need:"Cần chọn giải và VĐV.",
+nDUPR_JSON:"Theo định dạng JSON tạo trận của DUPR partner API (cần quyền partner; VĐV cần DUPR ID).",nDUPR_CSV:"Mẫu CSV câu lạc bộ của DUPR chỉ tải được trong DUPR (Clubs → Matches → Import via CSV). Các cột chứa đúng trường DUPR yêu cầu; chép sang mẫu đã tải. Mọi VĐV cần DUPR ID.",nGEN:"Hệ thống này chưa công bố định dạng tải hàng loạt: CSV chung để nhập tay / gửi quản trị hệ thống."}};
+</script>
+<script src="../assets/vpa-i18n.js?v=202611030036"></script><script src="../assets/vpa-config.js?v=202611030036"></script><script src="../assets/vpa-conversion.js?v=202611030036"></script><script src="../assets/vpa-data.js?v=202611030036"></script><script src="../assets/vpa-log.js?v=202611030036"></script><script src="../assets/vpa-org.js?v=202611030036"></script><script src="../assets/vpa-admin.js?v=202611030036"></script>
+</body></html>

@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VPA Game Generator · VPA</title>
+<link rel="icon" href="../assets/favicon.svg?v=202611030036" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@100..125,400..900&display=swap&subset=vietnamese" rel="stylesheet">
+<link rel="stylesheet" href="../assets/vpa-pages.css?v=202611030036"></head><body>
+<header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611030036" alt="VPA – Vietnam Pickleball Asia"></a><nav><a href="../ranking/" data-i18n="navRk">Ranking</a><a href="../level/" data-i18n="navLv">Check your level</a><a href="../events/" data-i18n="navEv">Events</a><a href="../generate/" data-i18n="navTt" class="on">Tournament tools</a><a href="../privacy/" data-i18n="navPv">Privacy</a></nav><button id="langBtn">VI</button></header>
+<main><h1 data-i18n="h">VPA <span>Game generator</span></h1>
+<div id="msg"></div>
+<div class="tabs noprint"><button id="tabS" class="on" data-i18n="tS">Social play</button><button id="tabT" data-i18n="tT">Tournament</button></div>
+<div class="card noprint"><h3 data-i18n="plH">Players</h3>
+ <div class="row"><div><label data-i18n="pick">Pick from VPA players</label><input id="pick" list="plist" data-i18n-ph="search" placeholder="Search name"></div><div><button class="b" id="pickAdd" data-i18n="add">Add</button></div></div>
+ <div class="row"><div><label data-i18n="nn">…or new player name</label><input id="nn"></div><div><label data-i18n="g">Gender</label><select id="ng"><option value="male" data-i18n="m">Male</option><option value="female" data-i18n="f">Female</option></select></div>
+  <div><label data-i18n="sys">System</label><select id="ns"></select></div><div><label data-i18n="rat">Rating</label><input id="nr" type="number" step="0.001"></div><div><button class="b" id="newAdd" data-i18n="add">Add</button></div></div>
+ <p class="note"><span data-i18n="bulk">Bulk add: one per line "Name, M/F, SYSTEM, rating"</span> <a href="#" id="bulkT" data-i18n="show">show</a></p>
+ <div id="bulkBox" class="hide"><textarea id="bulk" rows="4" style="width:100%;background:#11153a;color:#fff;border-radius:6px;border:1px solid #3a3f7a"></textarea><button class="b g" id="bulkAdd" data-i18n="add">Add</button></div>
+ <div id="chips" class="chips"></div><p class="note" id="pcount"></p></div>
+
+<section id="S">
+<div class="card noprint"><div class="row">
+ <div><label data-i18n="courts">Courts</label><input id="courts" type="number" min="1" value="4"></div>
+ <div><label data-i18n="budget">Rounds or time</label><select id="budget"><option value="rounds" data-i18n="byR">Rounds</option><option value="time" data-i18n="byT">Time budget</option></select></div>
+ <div id="rW"><label data-i18n="rounds">Rounds</label><input id="rounds" type="number" min="1" value="6"></div>
+ <div id="tW" class="hide"><label data-i18n="mins">Minutes total / per game</label><div class="row"><input id="mins" type="number" value="120"><input id="gmin" type="number" value="15"></div></div>
+ <div><label data-i18n="fmt">Format</label><select id="fmt"><option value="doubles" data-i18n="dbl">Doubles</option><option value="singles" data-i18n="sgl">Singles</option></select></div>
+ <div><label data-i18n="mode">Mode</label><select id="mode"><option value="balanced" data-i18n="mBal">Balanced</option><option value="king" data-i18n="mKing">King / Queen of the court</option><option value="grouped" data-i18n="mGrp">Level-grouped</option></select></div>
+</div><div class="row">
+ <div><label><input type="checkbox" id="mixed"> <span data-i18n="mixed">Prefer mixed pairs</span></label></div>
+ <div><label data-i18n="fixed">Fixed pairs (one per line: Name + Name)</label><textarea id="fixed" rows="2" style="width:100%;background:#11153a;color:#fff;border-radius:6px;border:1px solid #3a3f7a"></textarea></div>
+ <div><label data-i18n="to">Play to / win by</label><div class="row"><input id="to" type="number" value="11"><input id="wb" type="number" value="2" min="1" max="2"></div></div>
+ <div><label data-i18n="seed">Seed</label><input id="seed" type="number" value="1"></div>
+ <div><label data-i18n="mt">Match type (rating weight)</label><select id="mt"><option value="club">club 0.8</option><option value="rec">rec 0.5</option><option value="league">league 0.9</option><option value="tournament">tournament 1.0</option></select></div>
+</div><p><button class="b o" id="gen" data-i18n="gen">Generate</button> <button class="b g" id="reseed" data-i18n="reseed">Shuffle (new seed)</button></p>
+<p class="note" data-i18n="algo">Sit-outs: fewest so far sit out first. Then a seeded search (greedy start + simulated-annealing swaps) minimises 10·|team level gap| + 6·repeat partners + 2·repeat opponents + 1.5·level spread on court (+3 same-gender pair if mixed preferred). Win % from the VPA rating model.</p></div>
+<div id="out"></div>
+</section>
+
+<section id="T" class="hide">
+<div class="card noprint"><h3 data-i18n="tH">Tournament setup</h3><div class="row">
+ <div><label data-i18n="tname">Event name</label><input id="tname"></div><div><label data-i18n="date">Date &amp; start</label><input id="tstart" type="datetime-local"></div>
+ <div><label data-i18n="div">Division (team VPA cap)</label><select id="tdiv"><option value="5.0">≤ 5.0</option><option value="5.5">≤ 5.5</option><option value="6.0">≤ 6.0</option><option value="6.5">≤ 6.5</option><option value="7.0">≤ 7.0</option><option value="99" data-i18n="open">Open</option></select></div>
+ <div><label data-i18n="tcourts">Courts / minutes per slot</label><div class="row"><input id="tcourts" type="number" value="4"><input id="tslot" type="number" value="20"></div></div>
+</div><div class="row">
+ <div><label data-i18n="pools">Pools</label><input id="npools" type="number" min="1" value="2"></div>
+ <div><label data-i18n="adv">Advance</label><select id="adv"><option value="2">Top 2 / pool</option><option value="1">Top 1 / pool</option><option value="3">Top 3 / pool</option><option value="4">Top 4 / pool</option><option value="AB" data-i18n="ab">Series A (1–2) + Series B (3–4)</option></select></div>
+ <div><label><input type="checkbox" id="third" checked> <span data-i18n="third">3rd-place match</span></label></div>
+ <div><label data-i18n="tfmt">Pool games: to / win by / cap</label><div class="row"><input id="tto" type="number" value="11"><input id="twb" type="number" value="2" min="1" max="2"><input id="tcap" type="number" value="15"></div></div>
+ <div><label data-i18n="bo">Finals</label><select id="bo"><option value="3" data-i18n="bo3">Best of 3</option><option value="1" data-i18n="bo1">Single game</option></select></div>
+</div>
+<h3 data-i18n="teamsH">Teams</h3><div class="row"><div><label data-i18n="p1">Player 1</label><select id="tp1"></select></div><div><label data-i18n="p2">Player 2</label><select id="tp2"></select></div><div><button class="b" id="tadd" data-i18n="addTeam">Add team</button></div><div><button class="b g" id="tauto" data-i18n="auto">Auto-pair remaining (balanced)</button></div></div>
+<div id="teams"></div>
+<p><button class="b o" id="tgen" data-i18n="tgen">Build pools &amp; schedule</button></p>
+<p class="note" data-i18n="tnote">Team VPA = sum of both players' VPA levels; eligibility uses the level's uncertainty (team upper bound ≤ cap = eligible). Pools are snake-seeded by team level; round robin; tiebreakers: wins, head-to-head, point differential, points for. Knockout: cross-seeded, byes to top seeds.</p></div>
+<div id="tout"></div>
+</section>
+
+<div class="card noprint" id="orgBox"><h3 data-i18n="saveH">Start event (organisers)</h3><div id="orgIn" class="row"><div><label data-i18n="em">Organiser email</label><input id="email" type="email"></div><div><button class="b g" id="send" data-i18n="send">Send magic link</button></div></div>
+ <div class="row"><div><label data-i18n="ename">Event name</label><input id="ename"></div><div><button class="b o" id="start" data-i18n="start" disabled>Start event</button></div></div><p class="note" id="orgNote" data-i18n="offline">Offline mode: anyone can generate, print and copy schedules; only signed-in organisers can save an event.</p></div>
+</main><footer><div class="fl"><a href="../ranking/" data-i18n="navRk">Ranking</a><a href="../level/" data-i18n="navLv">Check your level</a><a href="../events/" data-i18n="navEv">Events</a><a href="../results/" data-i18n="navRes">Results</a><a href="../generate/" data-i18n="navTt">Tournament tools</a><a href="../log/" data-i18n="navLog">Organiser log</a><a href="../privacy/" data-i18n="navPv">Privacy</a></div><span data-i18n="ftTag">VPA — Vietnam Pickleball Asia</span></footer>
+<datalist id="plist"></datalist>
+<script>window.VPA_I18N={en:{nRes:"Results",nLog:"Log",nRank:"VPA Ranking",nGen:"Game generator",h:"VPA <span>Game generator</span>",tS:"Social play",tT:"Tournament",plH:"Players",pick:"Pick from VPA players",search:"Search name",add:"Add",nn:"…or new player name",g:"Gender",m:"Male",f:"Female",sys:"System",rat:"Rating",bulk:"Bulk add: one per line \"Name, M/F, SYSTEM, rating\"",show:"show",
+courts:"Courts",budget:"Rounds or time",byR:"Rounds",byT:"Time budget",rounds:"Rounds",mins:"Minutes total / per game",fmt:"Format",dbl:"Doubles",sgl:"Singles",mode:"Mode",mBal:"Balanced",mKing:"King / Queen of the court",mGrp:"Level-grouped",mixed:"Prefer mixed pairs",fixed:"Fixed pairs (one per line: Name + Name)",to:"Play to / win by",seed:"Seed",mt:"Match type (rating weight)",gen:"Generate",reseed:"Shuffle (new seed)",
+algo:"Sit-outs: fewest so far sit out first. Then a seeded search (greedy start + simulated-annealing swaps) minimises 10·|team level gap| + 6·repeat partners + 2·repeat opponents + 1.5·level spread on court (+3 same-gender pair if mixed preferred). Win % from the VPA rating model.",
+tH:"Tournament setup",tname:"Event name",date:"Date &amp; start",div:"Division (team VPA cap)",open:"Open",tcourts:"Courts / minutes per slot",pools:"Pools",adv:"Advance",ab:"Series A (1–2) + Series B (3–4)",third:"3rd-place match",tfmt:"Pool games: to / win by / cap",bo:"Finals",bo3:"Best of 3",bo1:"Single game",teamsH:"Teams",p1:"Player 1",p2:"Player 2",addTeam:"Add team",auto:"Auto-pair remaining (balanced)",tgen:"Build pools &amp; schedule",
+tnote:"Team VPA = sum of both players' VPA levels; eligibility uses the level's uncertainty (team upper bound ≤ cap = eligible). Pools are snake-seeded by team level; round robin; tiebreakers: wins, head-to-head, point differential, points for. Knockout: cross-seeded, byes to top seeds.",
+saveH:"Start event (organisers)",em:"Organiser email",send:"Send magic link",ename:"Event name",start:"Start event",offline:"Offline mode: anyone can generate, print and copy schedules; only signed-in organisers can save an event.",
+round:"Round",court:"Court",sit:"Sit out",print:"Print",copy:"Copy as text",share:"Share link",copied:"Copied ✓",stats:"Balance",imb:"mean team gap",maxi:"max gap",rp:"repeat partners",ro:"repeat opponents",so:"sit-outs per player",lvl:"VPA",need:"Add at least 4 players (2 for singles).",
+king1:"King of the court: only round 1 is fixed. Enter winners on the live event page to move winners up / losers down.",saved:"Event saved ✓ — live page:",notOrg:"Signed in, but this email is not an organiser.",signedIn:"Signed in as organiser:",sent:"Check your email for the sign-in link.",
+pool:"Pool",team:"Team",elig:"Eligibility",slot:"Slot",time:"Time",kos:"Knockout (projected)",eligible:"eligible",provisional:"provisional",needs_check:"needs check",not_eligible:"not eligible",noRating:"no rating – assumed 2.5 ± 0.8",remove:"remove",winA:"Win % A"},
+vi:{nRes:"Kết quả",nLog:"Nhập KQ",nRank:"Xếp hạng VPA",nGen:"Tạo lịch đấu",h:"VPA <span>Tạo lịch đấu</span>",tS:"Giao lưu",tT:"Giải đấu",plH:"VĐV",pick:"Chọn VĐV VPA",search:"Tìm tên",add:"Thêm",nn:"…hoặc tên VĐV mới",g:"Giới tính",m:"Nam",f:"Nữ",sys:"Hệ thống",rat:"Điểm",bulk:"Thêm nhiều: mỗi dòng \"Tên, M/F, HỆ THỐNG, điểm\"",show:"hiện",
+courts:"Số sân",budget:"Theo lượt hoặc thời gian",byR:"Số lượt",byT:"Thời gian",rounds:"Số lượt",mins:"Tổng phút / phút mỗi trận",fmt:"Nội dung",dbl:"Đánh đôi",sgl:"Đánh đơn",mode:"Kiểu",mBal:"Cân bằng",mKing:"Vua / Nữ hoàng sân",mGrp:"Chia theo trình",mixed:"Ưu tiên cặp nam–nữ",fixed:"Cặp cố định (mỗi dòng: Tên + Tên)",to:"Điểm ván / cách biệt",seed:"Mã ngẫu nhiên",mt:"Loại trận (hệ số xếp hạng)",gen:"Tạo lịch",reseed:"Xáo lại",
+algo:"Ngồi nghỉ: ai nghỉ ít nhất sẽ nghỉ trước. Sau đó thuật toán tìm kiếm (tham lam + hoán đổi mô phỏng tôi luyện, có mã ngẫu nhiên) tối thiểu 10·|chênh lệch trình 2 đội| + 6·lặp đồng đội + 2·lặp đối thủ + 1.5·độ chênh trình trên sân (+3 nếu cặp cùng giới khi ưu tiên nam–nữ). Tỉ lệ thắng theo mô hình xếp hạng VPA.",
+tH:"Thiết lập giải",tname:"Tên giải",date:"Ngày &amp; giờ bắt đầu",div:"Hạng (trần trình đội VPA)",open:"Mở rộng",tcourts:"Số sân / phút mỗi lượt",pools:"Số bảng",adv:"Đi tiếp",ab:"Series A (1–2) + Series B (3–4)",third:"Tranh hạng 3",tfmt:"Vòng bảng: điểm / cách biệt / điểm chạm",bo:"Chung kết",bo3:"Thắng 2/3 ván",bo1:"Một ván",teamsH:"Các đội",p1:"VĐV 1",p2:"VĐV 2",addTeam:"Thêm đội",auto:"Tự ghép cặp còn lại (cân bằng)",tgen:"Chia bảng &amp; xếp lịch",
+tnote:"Trình đội VPA = tổng trình VPA của 2 VĐV; điều kiện tham gia dùng độ bất định của trình (cận trên của đội ≤ trần = hợp lệ). Chia bảng rắn theo trình đội; vòng tròn; xếp hạng: số trận thắng, đối đầu, hiệu số, điểm ghi được. Loại trực tiếp: hạt giống chéo, đội hạt giống cao được miễn đấu.",
+saveH:"Bắt đầu giải (BTC)",em:"Email BTC",send:"Gửi link đăng nhập",ename:"Tên sự kiện",start:"Bắt đầu",offline:"Chế độ ngoại tuyến: ai cũng tạo, in và sao chép lịch được; chỉ BTC đã đăng nhập mới lưu sự kiện.",
+round:"Lượt",court:"Sân",sit:"Nghỉ",print:"In",copy:"Sao chép văn bản",share:"Link chia sẻ",copied:"Đã chép ✓",stats:"Độ cân bằng",imb:"chênh lệch TB",maxi:"chênh lệch lớn nhất",rp:"lặp đồng đội",ro:"lặp đối thủ",so:"lượt nghỉ mỗi người",lvl:"VPA",need:"Cần ít nhất 4 VĐV (2 nếu đánh đơn).",
+king1:"Vua sân: chỉ cố định lượt 1. Nhập đội thắng trên trang sự kiện trực tiếp để đội thắng lên sân trên, đội thua xuống.",saved:"Đã lưu ✓ — trang trực tiếp:",notOrg:"Đã đăng nhập nhưng email không phải BTC.",signedIn:"Đã đăng nhập BTC:",sent:"Kiểm tra email để lấy link đăng nhập.",
+pool:"Bảng",team:"Đội",elig:"Điều kiện",slot:"Lượt",time:"Giờ",kos:"Loại trực tiếp (dự kiến)",eligible:"hợp lệ",provisional:"tạm",needs_check:"cần kiểm tra",not_eligible:"không hợp lệ",noRating:"chưa có điểm – tạm 2.5 ± 0.8",remove:"xoá",winA:"% thắng A"}};</script>
+<script src="../assets/vpa-i18n.js?v=202611030036"></script><script src="../assets/vpa-config.js?v=202611030036"></script><script src="../assets/vpa-conversion.js?v=202611030036"></script><script src="../assets/vpa-rating.js?v=202611030036"></script><script src="../assets/vpa-data.js?v=202611030036"></script><script src="../assets/vpa-org.js?v=202611030036"></script><script src="../assets/vpa-gen.js?v=202611030036"></script>
+<script src="../assets/vpa-generate.js?v=202611030036"></script>
+</body></html>
