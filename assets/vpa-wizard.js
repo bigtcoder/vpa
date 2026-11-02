@@ -28,7 +28,8 @@
     const sync = () => { $('ename').value = $('tname').value = $('wname').value; }; $('wname').oninput = sync;
     $('wcourts').oninput = () => { $('courts').value = $('tcourts').value = $('wcourts').value; };
     $('pasteAdd').onclick = () => { const L = $('paste').value.split('\n').map(parseLine).filter(Boolean); if (!L.length) { $('paste').focus(); return; }
-      $('bulk').value = L.join('\n'); $('bulkAdd').click(); $('paste').value = ''; };
+      $('bulk').value = L.join('\n'); $('paste').value = ''; let tries = 0; // generator may still be loading on a slow phone: wait for it
+      (function go() { if ($('bulkAdd').onclick) $('bulkAdd').click(); else if (tries++ < 100) setTimeout(go, 100); })(); };
     const pick = t => { $('chS').classList.toggle('on', t === 'S'); $('chT').classList.toggle('on', t === 'T'); $('gen').classList.toggle('hide', t !== 'S'); $('tgen').classList.toggle('hide', t !== 'T'); $('reseed').classList.toggle('hide', t !== 'S'); };
     $('chS').onclick = () => { $('tabS').click(); pick('S'); }; $('chT').onclick = () => { $('tabT').click(); pick('T'); };
     $('tabS').addEventListener('click', () => pick('S')); $('tabT').addEventListener('click', () => pick('T'));
