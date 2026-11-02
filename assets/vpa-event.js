@@ -18,7 +18,7 @@
     for (let i = 0; i < ins.length; i += 2) if (ins[i] != null && ins[i + 1] != null) g.push([ins[i], ins[i + 1]]);
     const bo = +d.dataset.n, wins = g.reduce((s, [a, b]) => [s[0] + (a > b), s[1] + (b > a)], [0, 0]);
     if (!g.length || !g.every(([a, b]) => VPAGen.validGame(a, b, R)) || (bo === 3 && Math.max(...wins) !== 2) || (bo === 1 && g.length !== 1)) { st.textContent = vt('bad'); return; }
-    let r = await sb.from('match_games').delete().eq('match_id', m.id); if (r.error) return st.textContent = r.error.message;
+    if (d.dataset.busy) return; d.dataset.busy = 1; let r = await sb.from('match_games').delete().eq('match_id', m.id); if (r.error) { delete d.dataset.busy; return st.textContent = r.error.message; }
     r = await sb.from('match_games').insert(g.map((x, i) => ({ match_id: m.id, game_no: i + 1, score_a: x[0], score_b: x[1] }))); if (r.error) return st.textContent = r.error.message;
     r = await sb.from('matches').update({ status: 'final', played_on: new Date().toISOString().slice(0, 10) }).eq('id', m.id); if (r.error) return st.textContent = r.error.message;
     st.textContent = vt('saved'); await refresh(true); }
@@ -48,9 +48,12 @@
       const q = done ? VPAGen.qualifiers(ST, f, t) : lab; const poolOf = {}; pools.forEach(p => p.teams.forEach(t => poolOf[t] = p.id)); const B = VPAGen.bracket(q, { third: C.third, prefix: pre, poolOf: done ? poolOf : null });
       const res = {}; M.filter(m => m.slot && m.status === 'final').forEach(m => res[m.slot] = G(m)); VPAGen.advance(B, res); return { pre, stage, title, B, done }; });
     return { ST, out, done }; }
-  async function syncKO(out) { if (!org.isOrg) return false; let added = 0; const C = E.config, have = new Set(M.filter(m => m.slot).map(m => m.slot));
+  let syncing = null;
+  async function syncKO(out) { if (!org.isOrg) return false; if (syncing) return syncing; syncing = syncKO_(out).finally(() => syncing = null); return syncing; }
+  async function syncKO_(out) { let added = 0; const fresh = await sb.from('matches').select('id,slot,status,team_a_id,team_b_id').eq('event_id', id).not('slot', 'is', null); const ex = Object.fromEntries((fresh.data || []).map(x => [x.slot, x])); const C = E.config, have = new Set(M.filter(m => m.slot).map(m => m.slot));
     for (const { B, stage } of out) { const lastRd = B.length - 1;
-      for (const [ri, rd] of B.entries()) for (const m of rd) { if (m.bye || !m.a || !m.b || have.has(m.slot) || !C.teams[m.a]) continue;
+      for (const [ri, rd] of B.entries()) for (const m of rd) { if (m.bye || !m.a || !m.b || !C.teams[m.a] || !C.teams[m.b]) continue; const e0 = ex[m.slot];
+        if (e0) { if (e0.status !== 'final' && (e0.team_a_id !== m.a || e0.team_b_id !== m.b)) { const A = C.teams[m.a].players, Bp = C.teams[m.b].players; const u = await sb.from('matches').update({ team_a_id: m.a, team_b_id: m.b, team_a1: A[0], team_a2: A[1], team_b1: Bp[0], team_b2: Bp[1] }).eq('id', e0.id); if (!u.error) added++; } continue; }
         const A = C.teams[m.a].players, Bp = C.teams[m.b].players, st = m.third ? (stage === 'ko' ? 'third' : stage + '_third') : stage;
         const r = await sb.from('matches').insert({ event_id: id, division: M[0]?.division, played_on: new Date().toISOString().slice(0, 10), format: 'doubles', status: 'scheduled', stage: st, match_type: 'tournament_knockout', round_no: 100 + ri, slot: m.slot,
           team_a_id: m.a, team_b_id: m.b, team_a1: A[0], team_a2: A[1], team_b1: Bp[0], team_b2: Bp[1] }); if (!r.error) added++; } }

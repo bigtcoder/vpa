@@ -32,10 +32,16 @@
   function combine(P, inputs, gender) {
     const per = inputs.map(i => ({ ...i, ...toVPA(P, i.system, +i.rating, gender, i) })).filter(x => isFinite(x.m));
     if (!per.length) return null;
-    let w = 0, s = 0; per.forEach(p => { const wi = 1 / (p.sd * p.sd); w += wi; s += wi * p.m; });
-    const m = clamp(s / w), sd = Math.max(0.15, Math.sqrt(1 / w)), z = P.interval_z;
+    /* Rule (Tom, 2026-11-03): the level is the STRONGEST mapped rating, never an average that pulls it down.
+       A low rating on one system usually just means few games there. More agreeing ratings only shrink the uncertainty. */
+    let w = 0; per.forEach(p => { w += 1 / (p.sd * p.sd); });
+    const top = per.reduce((a, b) => (b.m > a.m ? b : a)), low = per.reduce((a, b) => (b.m < a.m ? b : a));
+    const m = clamp(top.m), sd = Math.max(0.15, Math.min(top.sd, Math.sqrt(1 / w))), z = P.interval_z;
     const conf = sd <= 0.2 ? 'high' : sd <= 0.33 ? 'medium' : 'low';
-    return { level: m, sd, lo: clamp(m - z * sd), hi: clamp(m + z * sd), confidence: conf, per };
+    /* informational only: linked ratings disagree beyond the calibration error -> organisers see it; never lowers the level */
+    const thr = Math.max(0.4, Math.hypot(top.sd, low.sd)), gap = top.m - low.m;
+    const mismatch = per.length > 1 && gap > thr ? { gap, threshold: thr, high: { system: top.system, rating: top.rating, m: top.m }, low: { system: low.system, rating: low.rating, m: low.m } } : null;
+    return { level: m, sd, lo: clamp(m - z * sd), hi: clamp(m + z * sd), confidence: conf, per, source: top.system, mismatch };
   }
   function eligibility(res, cap) {
     if (!res) return null;
@@ -64,6 +70,6 @@
     return Object.keys(R).map(p => ({ id: p, level: R[p], matches: N[p], wins: W[p], losses: L[p], provisional: N[p] < E.provisional_matches }))
       .sort((a, b) => b.level - a.level);
   }
-  g.VPA = { toVPA, fromVPA, combine, eligibility, equivalents, rank, load: (base = '') => fetch(base + 'assets/vpa-conversion.json?v=202611030036').then(r => r.json()) };
+  g.VPA = { toVPA, fromVPA, combine, eligibility, equivalents, rank, load: (base = '') => fetch(base + 'assets/vpa-conversion.json?v=202611030130').then(r => r.json()) };
   if (typeof module !== 'undefined') module.exports = g.VPA;
 })(typeof window !== 'undefined' ? window : globalThis);

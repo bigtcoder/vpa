@@ -29,3 +29,4 @@ footer a{color:#bbb}footer .fl{display:flex;flex-wrap:wrap;justify-content:cente
 .lvlbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end}.lvlbox .big{font-size:3.2rem;line-height:1}
 @media(max-width:600px){header.vh{padding:10px 14px}header.vh img{height:30px}}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.tabs{margin:.4rem 0}.tabs .b.on{background:#fff;color:#000}.vpab{font-size:.85em;opacity:.8}

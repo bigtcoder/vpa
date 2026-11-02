@@ -9,18 +9,21 @@
   const R = new VPARating.VPARating(); // current VPA rating from logged results (if any) overrides seeds
   try { const rk = VPARating.rank(VPAData.toMatches(DB.results || []), Object.fromEntries(DB.players.map(p => [p.id, lv[p.id]?.level ?? null])), Object.fromEntries(DB.players.map(p => [p.id, p.gender])));
     rk.forEach(r => { if (r.matches) lv[r.id] = { level: r.level, sd: r.sigma, hi: r.level + P.interval_z * r.sigma }; }); } catch (e) {}
+  const tp = c => { const x = c && c.per && c.per.find(y => y.system === c.source); return x ? { system: x.system, rating: x.rating } : null; };
+  /* headline = player's own strongest rating; VPA level (beta) secondary unless VPA_SCORE_PROMINENCE='primary' */
+  const lab = p => p.rt && !vpaPrimary() ? esc(vpaRt(p.rt)) + ' <span class="vpab">' + vt('vpaBeta') + ' ' + f2(p.level) + '</span>' : f2(p.level);
   function addP(p) { if (players.some(x => x.name.toLowerCase() === p.name.toLowerCase())) return; players.push(p); draw(); }
   pickAdd.onclick = () => { const p = DB.players.find(x => x.display_name === pick.value.trim()); if (!p) return; const c = lv[p.id];
-    addP({ id: p.id, db: true, name: p.display_name, gender: p.gender, level: c?.level ?? 2.5, sd: c?.sd ?? 0.8, rated: !!c }); pick.value = ''; };
+    addP({ id: p.id, db: true, name: p.display_name, gender: p.gender, level: c?.level ?? 2.5, sd: c?.sd ?? 0.8, rated: !!c, rt: tp(c) }); pick.value = ''; };
   function fromRating(name, gender, sys, r) { const c = isFinite(r) ? VPA.combine(P, [{ system: sys, rating: r, reliable: sys !== 'SELF' }], gender) : null;
-    return { id: 'n' + (++nid), name, gender, sys, rating: r, level: c?.level ?? 2.5, sd: c?.sd ?? 0.8, rated: !!c }; }
+    return { id: 'n' + (++nid), name, gender, sys, rating: r, level: c?.level ?? 2.5, sd: c?.sd ?? 0.8, rated: !!c, rt: c ? { system: sys, rating: r } : null }; }
   newAdd.onclick = () => { if (!nn.value.trim()) return; addP(fromRating(nn.value.trim(), ng.value, ns.value, parseFloat(nr.value))); nn.value = nr.value = ''; };
   bulkT.onclick = e => { e.preventDefault(); bulkBox.classList.toggle('hide'); };
   bulkAdd.onclick = () => { bulk.value.split('\n').map(l => l.split(',').map(s => s.trim())).filter(a => a[0]).forEach(([n, g, s, r]) => {
     const db = DB.players.find(x => x.display_name.toLowerCase() === n.toLowerCase()), gd = /^f|nữ|nu/i.test(g || '') ? 'female' : 'male';
-    if (db && !s) { const c = lv[db.id]; addP({ id: db.id, db: true, name: db.display_name, gender: db.gender, level: c?.level ?? 2.5, sd: c?.sd ?? 0.8, rated: !!c }); }
+    if (db && !s) { const c = lv[db.id]; addP({ id: db.id, db: true, name: db.display_name, gender: db.gender, level: c?.level ?? 2.5, sd: c?.sd ?? 0.8, rated: !!c, rt: tp(c) }); }
     else addP(fromRating(n, gd, (s || 'SELF').toUpperCase(), parseFloat(r))); }); bulk.value = ''; };
-  function draw() { chips.innerHTML = players.map((p, i) => '<span class="chip">' + esc(p.name) + ' <b>' + f2(p.level) + '</b>' + (p.rated ? '' : ' <span class="note" title="' + vt('noRating') + '">?</span>') + ' <button data-i="' + i + '" title="' + vt('remove') + '">×</button></span>').join('');
+  function draw() { chips.innerHTML = players.map((p, i) => '<span class="chip">' + esc(p.name) + ' <b>' + lab(p) + '</b>' + (p.rated ? '' : ' <span class="note" title="' + vt('noRating') + '">?</span>') + ' <button data-i="' + i + '" title="' + vt('remove') + '">×</button></span>').join('');
     chips.querySelectorAll('button').forEach(b => b.onclick = () => { const id = players[+b.dataset.i].id; players.splice(+b.dataset.i, 1); teams = teams.filter(t => !t.players.includes(id)); draw(); });
     pcount.textContent = players.length + ' ' + vt('plH').toLowerCase();
     const free = players.filter(p => !teams.some(t => t.players.includes(p.id))), o = free.map(p => '<option value="' + p.id + '">' + esc(p.name) + ' (' + f2(p.level) + ')</option>').join('');
@@ -43,7 +46,7 @@
       (o.mode === 'king' ? '<p class="note">' + vt('king1') + '</p>' : '') +
       '<p class="note"><b>' + vt('stats') + ':</b> ' + vt('imb') + ' ' + f2(s.meanImbalance) + ' · ' + vt('maxi') + ' ' + f2(s.maxImbalance) + ' · ' + vt('rp') + ' ' + s.repeatPartners + ' · ' + vt('ro') + ' ' + s.repeatOpponents + ' · ' + vt('so') + ' ' + s.sitoutMin + '–' + s.sitoutMax + '</p>' +
       res.rounds.map(r => '<h3>' + vt('round') + ' ' + r.round + '</h3><div class="courts">' + r.courts.map(c => '<div class="court"><h4>' + vt('court') + ' ' + c.court + '<span class="pct">' + Math.round(c.pA * 100) + '–' + (100 - Math.round(c.pA * 100)) + '%</span></h4>' +
-        '<div>' + c.a.map(x => esc(nm(x)) + ' <small>' + f2(byId()[x].level) + '</small>').join(' &amp; ') + '</div><div class="vs">vs</div><div>' + c.b.map(x => esc(nm(x)) + ' <small>' + f2(byId()[x].level) + '</small>').join(' &amp; ') + '</div></div>').join('') + '</div>' +
+        '<div>' + c.a.map(x => esc(nm(x)) + ' <small>' + lab(byId()[x]) + '</small>').join(' &amp; ') + '</div><div class="vs">vs</div><div>' + c.b.map(x => esc(nm(x)) + ' <small>' + lab(byId()[x]) + '</small>').join(' &amp; ') + '</div></div>').join('') + '</div>' +
         (r.sitouts.length ? '<p class="note">' + vt('sit') + ': ' + r.sitouts.map(x => esc(nm(x))).join(', ') + '</p>' : '')).join('') + '</div>';
     pr.onclick = () => print(); cp.onclick = () => copy(textS()); sh.onclick = () => copy(location.origin + location.pathname + '#' + share());
   }

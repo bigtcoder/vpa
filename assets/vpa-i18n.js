@@ -1,7 +1,15 @@
+/* ONE switch for how prominent the VPA score is site-wide. 'secondary' (default, launch): players' own
+   DUPR/PVNA/VDPR... ratings are the headline and the VPA level is a small "VPA level (beta)" line.
+   'primary': VPA level is the headline and rankings open on the VPA-score tab. */
+window.VPA_SCORE_PROMINENCE = window.VPA_SCORE_PROMINENCE || 'secondary';
+window.vpaPrimary = () => window.VPA_SCORE_PROMINENCE === 'primary';
+const _SYSL = { UTRP: 'UTR-P', SPORTCONNECT: 'Sport Connect', SELF: 'Self-rated' };
+/* headline rating text, e.g. "DUPR 4.20"; r: {system, rating} */
+window.vpaRt = r => r && r.system ? (_SYSL[r.system] || r.system) + ' ' + (+r.rating).toFixed(r.system === 'UTRP' ? 1 : 2) : '';
 /* Shared EN/VI toggle for VPA pages (same localStorage key as main site). Page supplies window.VPA_I18N = {en:{},vi:{}} */
 (function(){
-  const SH = {en:{navRk:"Ranking",navLv:"Check your level",navEv:"Events",navTt:"Tournament tools",navPv:"Privacy",navRes:"Results",navLog:"Organiser log",navHome:"Home",ftTag:"VPA — Vietnam Pickleball Asia"},
-    vi:{navRk:"Xếp hạng",navLv:"Kiểm tra trình độ",navEv:"Giải đấu",navTt:"Công cụ tổ chức giải",navPv:"Quyền riêng tư",navRes:"Kết quả",navLog:"Nhật ký BTC",navHome:"Trang chủ",ftTag:"VPA — Vietnam Pickleball Asia"}};
+  const SH = {en:{navRk:"Ranking",navLv:"Check your level",navEv:"Events",navTt:"Tournament tools",navPv:"Privacy",navRes:"Results",navLog:"Organiser log",navHome:"Home",ftTag:"VPA — Vietnam Pickleball Asia",vpaBeta:"VPA level (beta)",tabAll:"All systems",tabVpa:"VPA score (beta)",rating:"Rating"},
+    vi:{vpaBeta:"Trình VPA (beta)",tabAll:"Mọi hệ thống",tabVpa:"Điểm VPA (beta)",rating:"Điểm",navRk:"Xếp hạng",navLv:"Kiểm tra trình độ",navEv:"Giải đấu",navTt:"Công cụ tổ chức giải",navPv:"Quyền riêng tư",navRes:"Kết quả",navLog:"Nhật ký BTC",navHome:"Trang chủ",ftTag:"VPA — Vietnam Pickleball Asia"}};
   const D = () => window.VPA_I18N || {en:{},vi:{}};
   const G = (l, k) => (D()[l] || {})[k] ?? SH[l]?.[k];
   window.vt = k => G(window.vlang, k) ?? G('en', k) ?? k;
