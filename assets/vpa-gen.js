@@ -119,7 +119,7 @@
     L.sort((x, y) => y.w - x.w);
     const out = []; for (let i = 0; i < L.length;) { let j = i; while (j < L.length && L[j].w === L[i].w) j++;
       const grp = L.slice(i, j), hw = grp.length > 1 ? h2h(grp) : {}; grp.forEach(x => x.h2h = hw[x.id] || 0);
-      grp.sort((x, y) => y.h2h - x.h2h || y.pd - x.pd || y.pf - x.pf || String(x.id).localeCompare(String(y.id))); out.push(...grp); i = j; }
+      grp.sort((x, y) => y.h2h - x.h2h || y.pd - x.pd || y.pf - x.pf || (String(x.id) < String(y.id) ? -1 : String(x.id) > String(y.id) ? 1 : 0)); out.push(...grp); i = j; }
     out.forEach((x, i) => x.rank = i + 1); return out;
   }
   const pow2 = n => { let p = 1; while (p < n) p *= 2; return p; };
