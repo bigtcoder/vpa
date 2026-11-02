@@ -1,9 +1,9 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>VPA Vietnam Ranking (estimate) · VPA</title><meta name="description" content="VPA Vietnam ranking (estimate): PVNA, VDPR and public DUPR players on one VPA level scale.">
-<link rel="icon" href="../assets/favicon.svg?v=202611030340" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon.svg?v=202611030400" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@100..125,400..900&display=swap&subset=vietnamese" rel="stylesheet">
-<link rel="stylesheet" href="../assets/vpa-pages.css?v=202611030340"></head><body>
-<header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611030340" alt="VPA – Vietnam Pickleball Asia"></a><nav><a href="../ranking/" data-i18n="navRk" class="on">Ranking</a><a href="../level/" data-i18n="navLv">Check your level</a><a href="../events/" data-i18n="navEv">Events</a><a href="../generate/" data-i18n="navTt">Tournament tools</a><a href="../privacy/" data-i18n="navPv">Privacy</a></nav><button id="langBtn">VI</button></header>
+<link rel="stylesheet" href="../assets/vpa-pages.css?v=202611030400"></head><body>
+<header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611030400" alt="VPA – Vietnam Pickleball Asia"></a><nav><a href="../ranking/" data-i18n="navRk" class="on">Ranking</a><a href="../level/" data-i18n="navLv">Check your level</a><a href="../events/" data-i18n="navEv">Events</a><a href="../generate/" data-i18n="navTt">Tournament tools</a><a href="../privacy/" data-i18n="navPv">Privacy</a></nav><button id="langBtn">VI</button></header>
 <main><h1 data-i18n="h">VPA Vietnam <span>Ranking (estimate)</span></h1>
 <p class="warn" data-i18n="scope">Covers players listed on Vietnam's PVNA, VDPR, PICKNA (Nghệ An) and LOOL systems and public DUPR leaderboards (apps without public listings — VNPA, VPTA, LMPVN, Sport Connect — are not included yet) — <b>not a global ranking</b>. Every rating is shown as a VPA level (DUPR-equivalent doubles) and ranked by a conservative score (estimate − 1 SD) so uncertain estimates don't jump the queue. It will firm up as VPA match results are logged.</p>
 <div class="card"><h3 data-i18n="findH">Find my rank</h3><div class="row">
@@ -19,7 +19,7 @@
 vi:{nRk:"Xếp hạng",nRes:"Kết quả",h:"VPA Việt Nam <span>Xếp hạng (ước tính)</span>",scope:"Gồm các VĐV trên hệ thống PVNA, VDPR, PICKNA (Nghệ An), LOOL của Việt Nam và bảng xếp hạng DUPR công khai (các ứng dụng không công khai danh sách — VNPA, VPTA, LMPVN, Sport Connect — chưa có) — <b>không phải xếp hạng thế giới</b>. Mọi điểm trình được thể hiện bằng trình VPA (tương đương DUPR, đánh đôi) và xếp theo điểm thận trọng (ước tính − 1 độ lệch chuẩn) để các ước tính chưa chắc chắn không bị xếp quá cao. Bảng sẽ chính xác dần khi có thêm kết quả VPA.",
 findH:"Tìm thứ hạng của tôi",g:"Giới tính",sys:"Hệ thống",rat:"Điểm",findNote:"Tính ngay trên trình duyệt của bạn; dữ liệu bạn nhập không được gửi đi.",flt:"Tìm trong top 200",opt:"Tên, trình và tỉnh/thành hiển thị ở đây đã công khai trên các hệ thống gốc. Muốn sửa hoặc gỡ thông tin, dùng <a href=\"../privacy/\">form yêu cầu quyền riêng tư</a>.",
 male:"Nam",female:"Nữ",pl:"VĐV",lvl:"Trình VPA",rg:"Khoảng",ss:"Hệ thống",ct:"Tỉnh/thành",of:"trên",top:"top",cntT:"Hiển thị top 200 trong {n} VĐV {g} được xếp hạng. Cập nhật {d}.",doubles:"đôi"}};</script>
-<script src="../assets/vpa-i18n.js?v=202611030340"></script><script src="../assets/vpa-conversion.js?v=202611030340"></script><script src="../assets/vpa-rank.js?v=202611030340"></script>
+<script src="../assets/vpa-i18n.js?v=202611030400"></script><script src="../assets/vpa-conversion.js?v=202611030400"></script><script src="../assets/vpa-rank.js?v=202611030400"></script>
 <script>
 let P,T;const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),SL={UTRP:'UTR-P'};
 let TAB=vpaPrimary()?'vpa':'all';
@@ -30,6 +30,6 @@ function table(){if(!T)return;const g=tg.value,q=tq.value.toLowerCase(),L=T[g].f
  tb.innerHTML='<tr><th>#</th><th>'+vt('pl')+'</th><th>'+vt('lvl')+'</th><th>'+vt('rg')+'</th><th>'+vt('rating')+'</th><th>'+vt('ct')+'</th></tr>'+L.map(r=>'<tr><td>'+r.r+'</td><td>'+esc(r.n)+'</td><td><b>'+r.l.toFixed(2)+'</b></td><td class="note">'+r.lo.toFixed(2)+'–'+r.hi.toFixed(2)+'</td><td>'+rt(r)+'</td><td>'+esc(r.c)+'</td></tr>').join('')}
 function find(){const v=parseFloat(fr.value);if(!P||!isFinite(v)){fo.textContent='';return}const g=fg.value,c=VPA.combine(P,[{system:fs.value,rating:v}],g),k=VPARank.of(c.level-c.sd,g);
  fo.innerHTML=vpaRt({system:fs.value,rating:v})+' → #'+k.rank.toLocaleString()+' '+vt('of')+' '+k.n.toLocaleString()+' <span class="note">('+vt(g)+', '+vt('doubles')+' · '+vt('top')+' '+Math.max(0.1,100-k.pct).toFixed(1)+'%)</span><div class="note vpab">'+vt('vpaBeta')+': '+c.level.toFixed(2)+'</div>'}
-Promise.all([VPA.load('../'),VPARank.load('../'),fetch('../assets/vpa-ranking-top.json?v=202611030340').then(r=>r.json())]).then(([p,d,t])=>{P=p;T=t;const q=new URLSearchParams(location.search);if(q.get('rating')){fr.value=q.get('rating');fs.value=q.get('system')||'DUPR';fg.value=q.get('gender')||'male'}table();find()});
+Promise.all([VPA.load('../'),VPARank.load('../'),fetch('../assets/vpa-ranking-top.json?v=202611030400').then(r=>r.json())]).then(([p,d,t])=>{P=p;T=t;const q=new URLSearchParams(location.search);if(q.get('rating')){fr.value=q.get('rating');fs.value=q.get('system')||'DUPR';fg.value=q.get('gender')||'male'}table();find()});
 tg.oninput=tq.oninput=table;tAll.onclick=()=>{TAB='all';table()};tVpa.onclick=()=>{TAB='vpa';table()};fg.oninput=fs.oninput=fr.oninput=find;document.addEventListener('vpa-lang',()=>{table();find()});
 </script></body></html>

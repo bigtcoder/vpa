@@ -35,7 +35,7 @@ function dl(name,text,type){const a=document.createElement('a');a.href=URL.creat
 function idFor(pid,sys){const r=D.ratings.filter(x=>x.player_id===pid&&x.system===sys).sort((a,b)=>(a.observed_at<b.observed_at?1:-1))[0];return r?(r.external_id||r.profile_url||''):''}
 function latest(pid,sys){const r=D.ratings.filter(x=>x.player_id===pid&&x.system===sys).sort((a,b)=>(a.observed_at<b.observed_at?1:-1))[0];return r?r.rating:''}
 exSys.onchange=()=>exNote.textContent=vt(exSys.value.startsWith('DUPR')?'n'+exSys.value:'nGEN');exSys.onchange();
-exBtn.onclick=async()=>{const e=D.events.find(x=>x.id===exEv.value);if(!e)return;const res=demo?[]:(await sb.from('results_public').select('*').eq('event',e.name)).data||[];
+exBtn.onclick=async()=>{const e=D.events.find(x=>x.id===exEv.value);if(!e)return;const res=demo?[]:(await sb.from('results_public').select('*').eq('event_id',e.id)).data||[];
  const nm=Object.fromEntries(D.players.map(p=>[p.id,p.display_name])),S=exSys.value,fn=(e.name+'_'+S).replace(/\W+/g,'_');
  const P=['team_a1','team_a2','team_b1','team_b2'],gs=r=>{const g=(r.games||[]);return[0,1,2,3,4].map(i=>g[i])};
  if(S==='DUPR_JSON'){dl(fn+'.json',JSON.stringify(res.map(r=>({identifier:'vpa-'+r.id,location:'',matchDate:r.played_on,
