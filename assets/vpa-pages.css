@@ -30,3 +30,4 @@ footer a{color:#bbb}footer .fl{display:flex;flex-wrap:wrap;justify-content:cente
 @media(max-width:600px){header.vh{padding:10px 14px}header.vh img{height:30px}}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 .tabs{margin:.4rem 0}.tabs .b.on{background:#fff;color:#000}.vpab{font-size:.85em;opacity:.8}
+.card{overflow-x:auto}
