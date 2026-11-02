@@ -8,8 +8,8 @@ const _SYSL = { UTRP: 'UTR-P', SPORTCONNECT: 'Sport Connect', SELF: 'Self-rated'
 window.vpaRt = r => r && r.system ? (_SYSL[r.system] || r.system) + ' ' + (+r.rating).toFixed(r.system === 'UTRP' ? 1 : 2) : '';
 /* Shared EN/VI toggle for VPA pages (same localStorage key as main site). Page supplies window.VPA_I18N = {en:{},vi:{}} */
 (function(){
-  const SH = {en:{navRk:"Ranking",navLv:"Check your level",navEv:"Events",navTt:"Tournament tools",navPv:"Privacy",navRes:"Results",navLog:"Organiser log",navHome:"Home",ftTag:"VPA — Vietnam Pickleball Asia",vpaBeta:"VPA level (beta)",tabAll:"All systems",tabVpa:"VPA score (beta)",rating:"Rating"},
-    vi:{vpaBeta:"Trình VPA (beta)",tabAll:"Mọi hệ thống",tabVpa:"Điểm VPA (beta)",rating:"Điểm",navRk:"Xếp hạng",navLv:"Kiểm tra trình độ",navEv:"Giải đấu",navTt:"Công cụ tổ chức giải",navPv:"Quyền riêng tư",navRes:"Kết quả",navLog:"Nhật ký BTC",navHome:"Trang chủ",ftTag:"VPA — Vietnam Pickleball Asia"}};
+  const SH = {en:{navRk:"Rankings",navLv:"Find my level",navEv:"Events",navTt:"Run an event",navPv:"Privacy",navRes:"Results",navLog:"Organiser sign-in & log",navHome:"Home",navAb:"About",navOrg:"For organisers",ftTag:"VPA — Vietnam Pickleball Asia · a pickleball tournament series from Đà Nẵng",vpaBeta:"VPA level (beta)",tabAll:"All systems",tabVpa:"VPA score (beta)",rating:"Rating"},
+    vi:{vpaBeta:"Trình VPA (beta)",tabAll:"Mọi hệ thống",tabVpa:"Điểm VPA (beta)",rating:"Điểm",navRk:"Xếp hạng",navLv:"Xem trình của tôi",navEv:"Giải đấu",navTt:"Tổ chức giải",navPv:"Quyền riêng tư",navRes:"Kết quả",navLog:"Đăng nhập & nhật ký BTC",navHome:"Trang chủ",navAb:"Giới thiệu",navOrg:"Dành cho BTC",ftTag:"VPA — Vietnam Pickleball Asia · chuỗi giải pickleball từ Đà Nẵng"}};
   const D = () => window.VPA_I18N || {en:{},vi:{}};
   const G = (l, k) => (D()[l] || {})[k] ?? SH[l]?.[k];
   window.vt = k => G(window.vlang, k) ?? G('en', k) ?? k;

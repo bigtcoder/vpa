@@ -11,9 +11,11 @@
   function scoreCell(m, nGames) { const g = G(m), fin = m.status === 'final';
     const txt = g.map(x => x[0] + '–' + x[1]).join(', ');
     if (!org.isOrg || !m.id) return fin ? '<b>' + txt + '</b>' : '<span class="note">' + (m.predicted_a != null ? Math.round(m.predicted_a * 100) + '–' + (100 - Math.round(m.predicted_a * 100)) + '%' : '') + '</span>';
-    let h = '<div class="sc" data-m="' + m.id + '" data-n="' + nGames + '">'; for (let i = 0; i < nGames; i++) h += '<input type="number" min="0" value="' + (g[i]?.[0] ?? '') + '">–<input type="number" min="0" value="' + (g[i]?.[1] ?? '') + '">';
-    return h + '<button class="b g">' + vt('save') + '</button><span class="note"></span></div>'; }
-  function wire() { document.querySelectorAll('.sc').forEach(d => d.querySelector('button').onclick = () => saveScore(d)); }
+    const inp = v => '<span class="stp"><button type="button" class="step-btn" data-d="-1" aria-label="−1">−</button><input type="number" inputmode="numeric" min="0" value="' + v + '"><button type="button" class="step-btn" data-d="1" aria-label="+1">+</button></span>';
+    let h = '<div class="sc" data-m="' + m.id + '" data-n="' + nGames + '">'; for (let i = 0; i < nGames; i++) h += '<div class="gm">' + (nGames > 1 ? '<small>G' + (i + 1) + '</small> ' : '') + inp(g[i]?.[0] ?? '') + ' – ' + inp(g[i]?.[1] ?? '') + '</div>';
+    return h + '<button class="b save">' + vt('save') + '</button><span class="note"></span></div>'; }
+  function wire() { document.querySelectorAll('.sc').forEach(d => { d.querySelector('.save').onclick = () => saveScore(d);
+    d.querySelectorAll('.step-btn').forEach(b => b.onclick = () => { const i = b.parentNode.querySelector('input'); i.value = Math.max(0, (+i.value || 0) + +b.dataset.d); }); }); }
   async function saveScore(d) { const ins = [...d.querySelectorAll('input')].map(i => i.value === '' ? null : +i.value), g = [], st = d.querySelector('.note'), R = rules(), m = M.find(x => x.id === d.dataset.m);
     for (let i = 0; i < ins.length; i += 2) if (ins[i] != null && ins[i + 1] != null) g.push([ins[i], ins[i + 1]]);
     const bo = +d.dataset.n, wins = g.reduce((s, [a, b]) => [s[0] + (a > b), s[1] + (b > a)], [0, 0]);

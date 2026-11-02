@@ -20,7 +20,9 @@
     return; }
   let E = null, LV = await VPALevels(P), org = { isOrg: false }, REG = [];
   plist.innerHTML = LV.D.players.map(p => '<option value="' + esc(p.display_name) + '">').join('');
-  pp.innerHTML = [1, 2].map(i => '<div class="card"><b>' + vt('p') + ' ' + i + '</b><label>' + vt('nm') + '</label><input id="n' + i + '" list="plist"><div class="row"><div><label>' + vt('g') + '</label><select id="g' + i + '"><option value="male">' + vt('m') + '</option><option value="female">' + vt('f') + '</option></select></div><div><label>' + vt('sys') + '</label><select id="s' + i + '">' + SYS.map(s => '<option value="' + s + '">' + (P.systems[s]?.label || s) + '</option>').join('') + '</select></div><div><label>' + vt('rat') + '</label><input id="r' + i + '" type="number" step="0.001"></div></div><div class="row"><div><label>' + vt('sys') + ' 2 <small>(' + vt('opt') + ')</small></label><select id="s' + i + 'b"><option value="">—</option>' + SYS.map(s => '<option value="' + s + '">' + (P.systems[s]?.label || s) + '</option>').join('') + '</select></div><div><label>' + vt('rat') + ' 2</label><input id="r' + i + 'b" type="number" step="0.001"></div><div><label>' + vt('url') + '</label><input id="u' + i + '" placeholder="https://…"></div></div><p class="note" id="lv' + i + '"></p></div>').join('');
+  const sysOpt = SYS.map(s => '<option value="' + s + '">' + (P.systems[s]?.label || s) + '</option>').join('');
+  pp.innerHTML = [1, 2].map(i => '<div class="card"><h3>' + vt('p') + ' ' + i + '</h3><label for="n' + i + '">' + vt('nm') + '</label><input id="n' + i + '" list="plist" autocomplete="name"><div class="row"><div><label>' + vt('g') + '</label><select id="g' + i + '"><option value="male">' + vt('m') + '</option><option value="female">' + vt('f') + '</option></select></div><div><label>' + vt('sys') + '</label><select id="s' + i + '">' + sysOpt + '</select></div><div><label>' + vt('rat') + '</label><input id="r' + i + '" type="number" inputmode="decimal" step="0.001" placeholder="3.50"></div></div><details class="more"><summary>' + vt('more2') + '</summary><div class="row"><div><label>' + vt('sys') + ' 2</label><select id="s' + i + 'b"><option value="">—</option>' + sysOpt + '</select></div><div><label>' + vt('rat') + ' 2</label><input id="r' + i + 'b" type="number" inputmode="decimal" step="0.001"></div></div><label>' + vt('url') + '</label><input id="u' + i + '" placeholder="https://…"></details><p class="note" id="lv' + i + '"></p></div>').join('');
+  try { const m = JSON.parse(localStorage.getItem('vpa-me') || 'null'); if (m) { n1.value = m.n || ''; g1.value = m.g || 'male'; if (m.s) s1.value = m.s; r1.value = m.r || ''; ct.value = m.c || ''; } } catch (e) {}
   const dbP = n => LV.D.players.find(p => p.display_name.toLowerCase() === String(n).trim().toLowerCase());
   function player(i) { const n = $('n' + i).value.trim(); if (!n) return null; const d = dbP(n);
     if (d && LV.L[d.id]?.rated) { const links = VPAProfile.linked(LV.D.ratings, d.id), rk = LV.rank.find(x => x.id === d.id), C = VPAProfile.confidence({ matches: rk?.matches || 0, sigma: LV.L[d.id].sd, links }), sd0 = LV.lvl[d.id], top = sd0 && sd0.per.find(x => x.system === sd0.source);
@@ -41,17 +43,21 @@
     list.innerHTML = '<table><tr><th>#</th><th>' + vt('team') + '</th><th>' + vt('p') + '</th><th>' + vt('status') + '</th></tr>' + pub.map((r, i) => '<tr><td>' + (i + 1) + '</td><td>' + esc(r.team_name) + '</td><td>' + esc([r.p1_name, r.p2_name].filter(Boolean).join(' / ')) + '</td><td>' + vt('st_' + r.status) + (r.waitlist_pos ? ' #' + r.waitlist_pos : '') + ' · ' + (r.paid ? '<span class="pill eligible">' + vt('paid') + '</span>' : vt('unpaid')) + '</td></tr>').join('') + '</table>';
     adm.classList.toggle('hide', !org.isOrg); if (org.isOrg) admin(); }
   sub1.onclick = async () => { const p1 = player(1), p2 = player(2);
-    if (!tn.value.trim() || !p1 || !p2 || !cons.checked || ct.value.trim().length < 3) { fs.textContent = vt('need'); return; }
+    if (!p1 || !p2 || !cons.checked || ct.value.trim().length < 3) { fs.textContent = vt('need'); fs.className = 'warn'; return; }
+    if (!tn.value.trim()) tn.value = p1.name + ' / ' + p2.name;
+    try { localStorage.setItem('vpa-me', JSON.stringify({ n: n1.value.trim(), g: g1.value, s: s1.value, r: r1.value, c: ct.value.trim() })); } catch (e) {}
+    sub1.disabled = true;
     const sp = p => ({ id: p.id, level: p.level, sd: p.sd, gender: p.gender, src: p.src, system: p.system, rating: p.rating, conf: p.conf, selfOnly: p.selfOnly, mismatch: p.mismatch, sandbag: p.sandbag || [] }), snap = { p1: sp(p1), p2: sp(p2), team: (p1.level ?? 0) + (p2.level ?? 0), params: P.version };
     const id = crypto.randomUUID();
     const r = await sb.from('registrations').insert({ id, event_id: evId, team_name: tn.value.trim(), p1_id: p1.id, p1_name: p1.name, p1_gender: p1.gender, p1_system: p1.system, p1_rating: p1.rating,
       p2_id: p2.id, p2_name: p2.name, p2_gender: p2.gender, p2_system: p2.system, p2_rating: p2.rating, p1_ratings: p1.ratings || null, p2_ratings: p2.ratings || null, snapshot: snap, flags: flags(snap, null, E.division_cap, +E.pair_tolerance), consent_version: 'privacy-2026-11-03' });
-    if (r.error) { fs.textContent = r.error.message; return; }
+    if (r.error) { sub1.disabled = false; fs.textContent = r.error.message; return; }
     await sb.from('registration_contacts').insert({ registration_id: id, contact: ct.value.trim() });
-    await load(); const me = { ...REG.find(x => x.id === id), snapshot: snap, flags: flags(snap, null, E.division_cap, +E.pair_tolerance) }; fs.textContent = vt('done'); draw(); showPay(me);
+    await load(); const me = { ...REG.find(x => x.id === id), snapshot: snap, flags: flags(snap, null, E.division_cap, +E.pair_tolerance) }; fs.textContent = vt('done'); draw(); form.classList.add('hide'); showPay(me); pay.scrollIntoView({ behavior: 'smooth' });
   };
   async function showPay(me) { if (!me) return; pay.classList.remove('hide');
-    const es = entry(me); let h = '<p class="' + (es.status === 'eligible' ? 'note' : 'warn') + '" id="own">' + VPAProfile.t('own_' + es.status) + '</p><h3>' + vt('payH') + '</h3>' + (me.status === 'waitlist' ? '<p class="warn">' + vt('wl') + ' ' + me.waitlist_pos + '</p>' : '');
+    const es = entry(me); const hasPay = E.fee_vnd && E.bank_bin && E.bank_account && me.status === 'registered';
+    let h = '<div class="okmsg"><h2>' + vt('youIn') + '</h2><p>' + esc(me.team_name) + '</p><ol>' + (hasPay ? '<li>' + vt('ns1') + '</li>' : '') + '<li>' + vt('ns2') + '</li><li>' + vt('ns3') + ' <a href="../event/?id=' + evId + '">' + vt('ns3l') + '</a></li></ol></div><p class="' + (es.status === 'eligible' ? 'note' : 'warn') + '" id="own">' + VPAProfile.t('own_' + es.status) + '</p><h3>' + vt('payH') + '</h3>' + (me.status === 'waitlist' ? '<p class="warn">' + vt('wl') + ' ' + me.waitlist_pos + '</p>' : '');
     const ref = 'VPA' + me.id.replace(/-/g, '').slice(0, 8).toUpperCase();
     if (E.fee_vnd && E.bank_bin && E.bank_account && me.status === 'registered') { h += '<div class="row"><div id="qr"></div><div><p>' + vt('ref') + ': <b>' + ref + '</b></p><p>' + vt('amt') + ': <b>' + E.fee_vnd.toLocaleString('vi-VN') + ' ₫</b></p><p>' + vt('acct') + ': ' + esc((VietQR.BANKS.find(b => b[0] === E.bank_bin) || [, E.bank_bin])[1]) + ' · ' + esc(E.bank_account) + ' · ' + esc(E.bank_account_name || '') + '</p><p class="note">' + vt('payN') + '</p></div></div>'; }
     pay.innerHTML = h; if ($('qr')) VietQR.render($('qr'), { bin: E.bank_bin, account: E.bank_account, amount: E.fee_vnd, info: ref }); }
@@ -71,7 +77,7 @@
     adm.querySelectorAll('button[data-a]').forEach(b => b.onclick = async () => { const r = REG.find(x => x.id === b.dataset.id); let u;
       if (b.dataset.a === 'paid') u = r.paid ? { paid: false, paid_at: null, paid_by: null } : { paid: true, paid_at: new Date().toISOString(), paid_by: org.email };
       if (b.dataset.a === 'wd') u = { status: 'withdrawn' };
-      if (b.dataset.a === 'ok' || b.dataset.a === 'rej') { const note = prompt(vt('noteQ')); if (note === null) return; u = { review_status: b.dataset.a === 'ok' ? 'approved' : 'rejected', review_note: note.slice(0, 500) || null, reviewed_by: org.email, reviewed_at: new Date().toISOString() }; if (b.dataset.a === 'rej') u.status = 'rejected'; }
+      if (b.dataset.a === 'ok' || b.dataset.a === 'rej') { u = { review_status: b.dataset.a === 'ok' ? 'approved' : 'rejected', review_note: null, reviewed_by: org.email, reviewed_at: new Date().toISOString() }; if (b.dataset.a === 'rej') u.status = 'rejected'; }
       if (b.dataset.a === 'link') { await linkProfiles(r); await refresh(); return; }
       if (b.dataset.a === 'ovr') { const why = prompt(vt('ovrQ')); if (!why) return; u = { override_reason: why, override_by: org.email }; }
       const q = await sb.from('registrations').update(u).eq('id', r.id); if (q.error) alert(q.error.message); await refresh(); }); }
