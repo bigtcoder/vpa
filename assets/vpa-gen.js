@@ -9,12 +9,12 @@
   /* predicted probability that side A wins a game (VPA model: rally p = sigmoid(meanA-meanB / S)) */
   function winP(A, B, L, to = 11, winBy = 2, bestOf = 1) {
     const pg = VR.gameWinP(VR.sigmoid((mean(A, L) - mean(B, L)) / VR.C.S), to, winBy); return VR.matchP(pg, bestOf); }
-  const DEFW = { imbalance: 10, partner: 6, opponent: 2, spread: 1.5, mixed: 3, sitBack: 4 };
+  const DEFW = { imbalance: 10, partner: 6, opponent: 2, spread: 1.5, mixed: 20, sitBack: 4 };
 
   /* ---------- social / round-robin generator ---------- */
   function social(o) {
     const P = o.players, per = o.format === 'singles' ? 2 : 4, r = rng(o.seed ?? 1), W = Object.assign({}, DEFW, o.weights || {});
-    if (o.mode === 'grouped') W.spread = Math.max(W.spread, 8);
+    if (o.mode === 'grouped') { W.spread = Math.max(W.spread, 25); W.opponent = Math.min(W.opponent, 0.3); }
     const L = {}, G = {}; P.forEach(p => { L[p.id] = +p.level || 2.5; G[p.id] = p.gender; });
     const fixed = {}; (o.fixedPairs || []).forEach(([a, b]) => { fixed[a] = b; fixed[b] = a; });
     const sat = {}, lastSat = {}, pc = {}, oc = {}; P.forEach(p => { sat[p.id] = 0; lastSat[p.id] = -9; });
