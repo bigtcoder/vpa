@@ -110,7 +110,7 @@
       const m = await sb.from('matches').insert(rows); if (m.error) throw m.error; done(e.data.id);
     } else { if (!lastT) tgen_(); const { c, pools, ms } = lastT, map = await ensurePlayers(sb, teams.flatMap(t => t.players));
       const tcfg = Object.fromEntries(teams.map(t => [t.id, { name: t.name, players: t.players.map(x => map[x]), level: +t.level.toFixed(3), sd: +t.sd.toFixed(3) }]));
-      const e = await sb.from('events').insert({ name: c.name, starts_on: (c.start || today).slice(0, 10), kind: 'tournament', config: { cap: c.cap, adv: c.adv, third: c.third, rules: c.rules, courts: c.courts, slotMinutes: c.slotMinutes, pools, teams: tcfg } }).select().single(); if (e.error) throw e.error;
+      const e = await sb.from('events').insert({ name: (c.name || '').trim() || 'VPA tournament ' + today, starts_on: (c.start || today).slice(0, 10), kind: 'tournament', config: { cap: c.cap, adv: c.adv, third: c.third, rules: c.rules, courts: c.courts, slotMinutes: c.slotMinutes, pools, teams: tcfg } }).select().single(); if (e.error) throw e.error;
       const rows = ms.map(m => ({ event_id: e.data.id, division: c.cap >= 99 ? 'Open' : 'VPA ≤ ' + c.cap, played_on: (c.start || today).slice(0, 10), format: 'doubles', status: 'scheduled', stage: 'pool', match_type: 'tournament', round_no: m.slot_no, court: m.court, pool: m.pool,
         team_a_id: m.a, team_b_id: m.b, team_a1: tcfg[m.a].players[0], team_a2: tcfg[m.a].players[1], team_b1: tcfg[m.b].players[0], team_b2: tcfg[m.b].players[1], scheduled_at: m.scheduled_at || null, predicted_a: +m.pA.toFixed(3) }));
       const m = await sb.from('matches').insert(rows); if (m.error) throw m.error; done(e.data.id); }

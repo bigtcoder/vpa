@@ -15,7 +15,7 @@
     const ls = async () => { const r = await sb.from('events').select('id,name,starts_on').eq('reg_open', true).order('starts_on'); list.innerHTML = (r.data || []).map(e => '<p><a href="?event=' + e.id + '">' + esc(e.name) + '</a> · ' + esc(e.starts_on || '') + '</p>').join('') || '<p class="note">–</p>'; info.innerHTML = ''; };
     VPAOrg.init(st => { orgIn.classList.toggle('hide', !!st.isOrg); orgNote.textContent = st.isOrg ? vt('signedIn') + ' ' + st.email : '';
       if (st.isOrg) { adm.classList.remove('hide'); adm.innerHTML = '<div class="row"><div><label>' + vt('nev') + '</label><input id="nev"></div><div><label>Date</label><input id="ned" type="date"></div><div><button class="b o" id="nec">' + vt('save') + '</button></div></div>';
-        nec.onclick = async () => { const r = await sb.from('events').insert({ name: nev.value.trim(), starts_on: ned.value || null, kind: 'tournament', reg_open: false }).select('id').single(); if (!r.error) location.search = '?event=' + r.data.id; else alert(r.error.message); }; } ls(); });
+        nec.onclick = async () => { if (!nev.value.trim()) { nev.focus(); return; } nec.disabled = true; const r = await sb.from('events').insert({ name: nev.value.trim(), starts_on: ned.value || null, kind: 'tournament', reg_open: false }).select('id').single(); if (!r.error) location.search = '?event=' + r.data.id; else alert(r.error.message); }; } ls(); });
     send.onclick = async () => { const r = await VPAOrg.signIn(email.value.trim()); orgNote.textContent = r.error ? r.error.message : vt('sent'); };
     return; }
   let E = null, LV = await VPALevels(P), org = { isOrg: false }, REG = [];
