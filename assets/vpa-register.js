@@ -27,9 +27,9 @@
       return { id: d.id, name: d.display_name, gender: d.gender || $('g' + i).value, system: top?.system ?? null, rating: top?.rating ?? null, level: LV.L[d.id].level, sd: LV.L[d.id].sd, src: 'VPA', conf: C.label, selfOnly: C.selfOnly, mismatch: sd0?.mismatch || null, sandbag: VPAProfile.sandbag(rk?.history || []) }; }
     const g = $('g' + i).value, u = $('u' + i).value.trim(), rs = [[$('s' + i).value, parseFloat($('r' + i).value)], [$('s' + i + 'b').value, parseFloat($('r' + i + 'b').value)]].filter(([s, r]) => s && isFinite(r)).map(([system, rating], k) => ({ system, rating, url: k === 0 && u ? u : null }));
     const c = rs.length ? VPA.combine(P, rs.map(x => ({ system: x.system, rating: x.rating, reliable: x.system !== 'SELF' })), g) : null, top = c && rs.find(x => x.system === c.source);
-    const links = rs.map(x => ({ system: x.system, rating: x.rating, verified: x.system !== 'SELF' && !!x.url })), C = VPAProfile.confidence({ matches: 0, sigma: c?.sd ?? 0.8, links });
+    const links = rs.map(x => ({ system: x.system, rating: x.rating, verified: x.system !== 'SELF' && !!x.url, date: new Date().toISOString().slice(0, 10) })), C = VPAProfile.confidence({ matches: 0, sigma: c?.sd ?? 0.8, links });
     return { id: d?.id || null, name: n, gender: g, system: top?.system ?? null, rating: top?.rating ?? null, ratings: rs, level: c?.level ?? null, sd: c?.sd ?? null, src: top?.system || null, conf: C.label, selfOnly: C.selfOnly, mismatch: c?.mismatch || null }; }
-  [1, 2].forEach(i => ['n', 's', 'r', 'g', 'sb', 'rb', 'u'].forEach(k => $(k + i).oninput = () => { const p = player(i); $('lv' + i).textContent = p && p.level != null ? (p.rating != null ? vpaRt(p) + ' · ' : '') + vt('vpaBeta') + ' ' + f2(p.level) : ''; }));
+  [1, 2].forEach(i => ['n' + i, 's' + i, 'r' + i, 'g' + i, 's' + i + 'b', 'r' + i + 'b', 'u' + i].forEach(k => $(k).oninput = () => { const p = player(i); $('lv' + i).textContent = p && p.level != null ? (p.rating != null ? vpaRt(p) + ' · ' : '') + vt('vpaBeta') + ' ' + f2(p.level) : ''; }));
   async function load() { const [e, r] = await Promise.all([sb.from('events').select('*').eq('id', evId).maybeSingle(),
       sb.from('registrations').select(org.isOrg ? '*' : 'id,team_name,p1_name,p2_name,status,waitlist_pos,paid,created_at').eq('event_id', evId).order('created_at')]);
     if (!e.data) { msg.innerHTML = '<div class="warn">' + vt('nf') + '</div>'; return false; } E = e.data; REG = r.data || []; return true; }
@@ -48,14 +48,14 @@
       p2_id: p2.id, p2_name: p2.name, p2_gender: p2.gender, p2_system: p2.system, p2_rating: p2.rating, p1_ratings: p1.ratings || null, p2_ratings: p2.ratings || null, snapshot: snap, flags: flags(snap, null, E.division_cap, +E.pair_tolerance), consent_version: 'privacy-2026-11-03' });
     if (r.error) { fs.textContent = r.error.message; return; }
     await sb.from('registration_contacts').insert({ registration_id: id, contact: ct.value.trim() });
-    await load(); const me = REG.find(x => x.id === id); fs.textContent = vt('done'); draw(); showPay(me);
+    await load(); const me = { ...REG.find(x => x.id === id), snapshot: snap, flags: flags(snap, null, E.division_cap, +E.pair_tolerance) }; fs.textContent = vt('done'); draw(); showPay(me);
   };
   async function showPay(me) { if (!me) return; pay.classList.remove('hide');
     const es = entry(me); let h = '<p class="' + (es.status === 'eligible' ? 'note' : 'warn') + '" id="own">' + VPAProfile.t('own_' + es.status) + '</p><h3>' + vt('payH') + '</h3>' + (me.status === 'waitlist' ? '<p class="warn">' + vt('wl') + ' ' + me.waitlist_pos + '</p>' : '');
     const ref = 'VPA' + me.id.replace(/-/g, '').slice(0, 8).toUpperCase();
     if (E.fee_vnd && E.bank_bin && E.bank_account && me.status === 'registered') { h += '<div class="row"><div id="qr"></div><div><p>' + vt('ref') + ': <b>' + ref + '</b></p><p>' + vt('amt') + ': <b>' + E.fee_vnd.toLocaleString('vi-VN') + ' ₫</b></p><p>' + vt('acct') + ': ' + esc((VietQR.BANKS.find(b => b[0] === E.bank_bin) || [, E.bank_bin])[1]) + ' · ' + esc(E.bank_account) + ' · ' + esc(E.bank_account_name || '') + '</p><p class="note">' + vt('payN') + '</p></div></div>'; }
     pay.innerHTML = h; if ($('qr')) VietQR.render($('qr'), { bin: E.bank_bin, account: E.bank_account, amount: E.fee_vnd, info: ref }); }
-  const curOf = r => ({ p1: r.snapshot?.p1?.id ? LV.L[r.snapshot.p1.id] : null, p2: r.snapshot?.p2?.id ? LV.L[r.snapshot.p2.id] : null });
+  const curOf = r => { const a = r.p1_id || r.snapshot?.p1?.id, b = r.p2_id || r.snapshot?.p2?.id; return { p1: a ? LV.L[a] : null, p2: b ? LV.L[b] : null }; };
   function entry(r) { const s = r.snapshot || {}; return VPAProfile.entryStatus({ flags: [...new Set([...(r.flags || []), ...flags(s, curOf(r), E.division_cap, +E.pair_tolerance)])], players: [s.p1 || {}, s.p2 || {}] }); }
   // ---------- organiser
   async function admin() { const c = await sb.from('registration_contacts').select('*').in('registration_id', REG.map(r => r.id)); const CT = Object.fromEntries((c.data || []).map(x => [x.registration_id, x.contact]));
