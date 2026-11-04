@@ -441,3 +441,12 @@ main.auth{max-width:none;padding:0;display:grid;min-height:calc(100vh - 110px);b
 #fDet,#fDet2{display:grid;gap:14px}#fDet label,#fDet2 label{display:grid;gap:6px}
 .g2{display:grid;gap:16px}@media(min-width:900px){.g2{grid-template-columns:1fr 1fr}}
 .cnacc{margin-top:18px}
+
+.urs-hero{padding:36px 16px 44px;min-height:calc(100svh - 64px);display:flex;align-items:center}
+.urs-hero>.in{width:100%;max-width:1200px;margin:0 auto}
+.urs h1{font-size:clamp(2.6rem,11vw,5.6rem);line-height:.9;margin:.15em 0 .3em}
+.urs h1 em{color:var(--acc);font-style:inherit}
+.urs-hero .cut{max-height:240px}
+.hero h2{font-size:clamp(2.6rem,11vw,6rem);line-height:.92;margin:.12em 0 .12em;max-width:900px;text-shadow:0 2px 30px rgba(0,0,0,.35)}
+.hero{min-height:min(72vh,640px);padding-top:56px}
+@media(min-width:900px){.urs-hero{padding:72px 40px 64px;min-height:calc(100vh - 72px)}.urs-hero .cut{max-height:440px}.hero{padding-top:72px;padding-bottom:72px}}
