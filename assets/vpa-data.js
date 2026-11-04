@@ -10,7 +10,7 @@ window.VPAData = (function () {
   async function loadAll() {
     const c = await client(); if (!c) return null;
     const [p, r, m] = await Promise.all([c.from('players').select('id,display_name,gender,city'),
-      c.from('player_ratings').select('player_id,system,rating,rating_type,observed_at,profile_url,external_id'),
+      c.from('player_ratings').select('player_id,system,rating,rating_type,observed_at,profile_url,external_id,status'),
       c.from('results_public').select('*').order('played_on', { ascending: false })]);
     for (const x of [p, r, m]) if (x.error) throw x.error;
     return { players: p.data, ratings: r.data, results: m.data };

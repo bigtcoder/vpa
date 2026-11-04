@@ -4,10 +4,10 @@
 window.VPAProfile = (function () {
   const DAY = 864e5;
   /* verified = linked to a public profile/ID on the source system; otherwise self-reported (incl. SELF and typed-in values) */
-  const verified = r => r.system !== 'SELF' && !!(r.profile_url || r.external_id);
+  const verified = r => r.status ? r.status === 'verified' : (r.system !== 'SELF' && !!(r.profile_url || r.external_id));
   function linked(ratings, pid) {
     return ratings.filter(r => r.player_id === pid && r.system !== 'VPA').sort((a, b) => (b.observed_at || '').localeCompare(a.observed_at || ''))
-      .map(r => ({ system: r.system, rating: +r.rating, date: (r.observed_at || '').slice(0, 10), verified: verified(r), url: /^https?:/.test(r.profile_url || '') ? r.profile_url : null }));
+      .map(r => ({ system: r.system, rating: +r.rating, date: (r.observed_at || '').slice(0, 10), verified: verified(r), lk: r.status === 'linked_unverified', url: /^https?:/.test(r.profile_url || '') ? r.profile_url : null }));
   }
   /* High / Medium / Low from: verified VPA matches, number + recency of linked external ratings, model uncertainty (sigma) */
   function confidence({ matches = 0, sigma = 0.8, links = [] }, today = Date.now()) {

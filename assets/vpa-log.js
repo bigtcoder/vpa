@@ -13,7 +13,7 @@ fm.onchange=teams;addG.onclick=()=>game();teams();game();
 document.addEventListener('vpa-lang',()=>{});
 function validGames(){const T=+to.value,W=+wb.value;const g=[...document.querySelectorAll('.gr')].map(r=>[+r.querySelector('.ga').value,+r.querySelector('.gb').value]).filter(x=>x[0]||x[1]);
  return g.length&&g.every(([a,b])=>Math.max(a,b)>=T&&Math.abs(a-b)>=W)?g:null}
-async function refresh(){if(!sb)return;const [p,r,e]=await Promise.all([sb.from('players').select('id,display_name,gender'),sb.from('player_ratings').select('*'),sb.from('events').select('id,name,starts_on').order('starts_on',{ascending:false})]);
+async function refresh(){if(!sb)return;const [p,r,e]=await Promise.all([sb.from('players').select('id,display_name,gender'),sb.from('player_ratings').select('id,player_id,system,rating,rating_type,observed_at,profile_url,external_id,source,created_at,status,last_checked'),sb.from('events').select('id,name,starts_on').order('starts_on',{ascending:false})]);
  D={players:p.data||[],ratings:r.data||[],events:e.data||[]};plist.innerHTML=D.players.map(p=>'<option value="'+esc(p.display_name)+'">').join('');
  const o=D.events.map(e=>'<option value="'+e.id+'">'+esc(e.name)+'</option>').join('');ev.innerHTML='<option value="">—</option>'+o;exEv.innerHTML=o}
 async function save(){const g=validGames();if(!g){sv.textContent=vt('bad');return}

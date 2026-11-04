@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Log in · VPA</title><link rel="icon" href="../assets/favicon.svg?v=202611041330" type="image/svg+xml"><link rel="stylesheet" href="../assets/vpa-pages.css?v=202611041330"></head><body><header class="vh"><a href="../" aria-label="VPA home"><img src="../assets/vpa-logo.webp?v=202611041330" alt="VPA" width="86" height="30"></a><nav><a href="../events/" data-i18n="navEv">Events</a><a href="../results/" data-i18n="navRes">Results</a><a href="../ranking/" data-i18n="navRk">Rankings</a><a href="../about/" data-i18n="navAb">About</a></nav><a class="hcta" href="../level/" data-i18n="navLv">Find my level</a><button id="langBtn">VI</button></header>
+<main class="auth"><section class="authc" id="authc">
+<div class="kick" data-i18n="lgK">VPA account</div>
+<div class="seg2" role="tablist"><button id="tIn" class="on" role="tab" data-i18n="aLogin">Log in</button><button id="tUp" role="tab" data-i18n="aSignup">Sign up</button></div>
+<h1 id="lgH" data-i18n="lgH">Log in</h1><p class="lead" data-i18n="lgP">One account for players and organisers. Free.</p>
+<div id="fMain"><button class="b gg xl" id="gBtn"><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span data-i18n="lgG">Continue with Google</span></button>
+<div class="or"><span data-i18n="lgOr">or</span></div>
+<form id="f" novalidate><label id="nameL" hidden><span data-i18n="lgName">Your name</span><input id="nm" autocomplete="name" maxlength="80"></label>
+<label><span data-i18n="lgEmail">Email</span><input id="em" type="email" autocomplete="email" required></label>
+<label><span data-i18n="lgPw">Password</span><input id="pw" type="password" autocomplete="current-password" minlength="8" required><small class="note" id="pwN" hidden data-i18n="lgPwN">At least 8 characters</small></label>
+<button class="b acc xl" id="go" data-i18n="lgGo">Log in</button></form>
+<p class="alt"><button class="lnk" id="magic" data-i18n="lgMagic">Email me a log-in link instead</button><button class="lnk" id="forgot" data-i18n="lgForgot">Forgot password?</button></p>
+<p class="note" id="terms" hidden data-i18n="lgTerms"></p></div>
+<form id="fReset" hidden><h2 data-i18n="lgNewPw">Set a new password</h2><label><span data-i18n="lgPw">Password</span><input id="pw2" type="password" autocomplete="new-password" minlength="8"></label><button class="b acc xl" data-i18n="lgSave">Save password</button></form>
+<p class="msg" id="msg" role="status"></p></section>
+<aside class="authside" style="--img:url(img/ev5.webp)"><div><div class="pnew" data-i18n="cN">New</div><b data-i18n="cH">The world's first universal pickleball rating</b><p data-i18n="cnP">Your strongest rating sets your level.</p><div class="urs-chips"><span>DUPR</span><span>PVNA</span><span>VDPR</span><span>UTR-P</span><span>LOOL</span></div></div></aside></main>
+<footer><div class="fi"><img class="flogo" src="../assets/vpa-logo.webp?v=202611041330" alt="VPA"><div class="fbig" data-i18n="fBig">Play your level<i>.</i></div><div class="fcols"><div><b data-i18n="fTour">Tour</b><a href="../events/" data-i18n="navEv">Events</a><a href="../results/" data-i18n="navRes">Results</a><a href="../ranking/" data-i18n="navRk">Rankings</a><a href="../level/" data-i18n="navLv">Find my level</a></div><div><b>VPA</b><a href="../about/" data-i18n="navAb">About</a><a href="../privacy/" data-i18n="navPv">Privacy</a></div><div><b data-i18n="navOrg">For organisers</b><a href="../generate/" data-i18n="navTt">Run an event</a><a href="../log/" data-i18n="navLog">Organiser sign-in &amp; log</a></div><div><b data-i18n="fFol">Follow</b><a href="https://www.papifinals.com" target="_blank" rel="noopener">Papi Point Finals ↗</a><span class="note" data-i18n="fSoon" style="color:#6b7380">VPA social channels coming soon</span></div></div><div class="fbot"><span data-i18n="ftTag">VPA</span><span><span data-i18n="fPh">Photos:</span> <a href="https://www.pexels.com/license/" target="_blank" rel="noopener">Pexels</a></span></div></div></footer>
+<script>window.VPA_I18N={en:{},vi:{}};</script>
+<script src="../assets/vpa-i18n.js?v=202611041330"></script><script src="../assets/vpa-config.js?v=202611041330"></script><script src="../assets/vpa-data.js?v=202611041330"></script><script src="../assets/vpa-account.js?v=202611041330"></script>
+<script>(async function(){
+const A=VPAAccount,c=await A.sb(),$=id=>document.getElementById(id);let up=new URLSearchParams(location.search).get('mode')==='signup';
+const say=(m,bad)=>{$('msg').innerHTML=m;$('msg').className='msg'+(bad?' bad':' ok')};
+const next=()=>{const n=new URLSearchParams(location.search).get('next');return n&&/^[a-z/?=&#._-]*$/i.test(n)?A.ROOT+n.replace(/^\//,''):A.ROOT+'account/'};
+function mode(){ $('tIn').classList.toggle('on',!up);$('tUp').classList.toggle('on',up);$('nameL').hidden=!up;$('pwN').hidden=!up;$('terms').hidden=!up;$('forgot').hidden=up;
+ $('lgH').dataset.i18n=up?'lgHs':'lgH';$('lgH').innerHTML=vt(up?'lgHs':'lgH');$('go').dataset.i18n=up?'lgGoS':'lgGo';$('go').innerHTML=vt(up?'lgGoS':'lgGo');$('pw').autocomplete=up?'new-password':'current-password';say('')}
+$('tIn').onclick=()=>{up=false;mode()};$('tUp').onclick=()=>{up=true;mode();$('nm').focus()};mode();
+const redir=A.ROOT+'login/';
+$('gBtn').onclick=async()=>{const r=await c.auth.signInWithOAuth({provider:'google',options:{redirectTo:redir}});if(r.error)say(vt('lgNoG'),1)};
+$('f').onsubmit=async e=>{e.preventDefault();const em=$('em').value.trim(),pw=$('pw').value;$('go').disabled=true;let r;
+ if(up){const nm=$('nm').value.trim();if(!nm){$('go').disabled=false;$('nm').focus();return}
+  r=await c.auth.signUp({email:em,password:pw,options:{data:{name:nm},emailRedirectTo:redir}});
+  if(!r.error&&!r.data.session){$('go').disabled=false;return say(vt('lgSent'))}}
+ else r=await c.auth.signInWithPassword({email:em,password:pw});
+ $('go').disabled=false;if(r.error)return say(vt('lgErr')+A.esc(r.error.message),1);
+ await A.refresh();location.href=up?A.ROOT+'account/?onboard=1':next()};
+$('magic').onclick=async()=>{const em=$('em').value.trim();if(!em){$('em').focus();return}const r=await c.auth.signInWithOtp({email:em,options:{emailRedirectTo:redir,shouldCreateUser:true}});say(r.error?vt('lgErr')+A.esc(r.error.message):vt('lgSent'),!!r.error)};
+$('forgot').onclick=async()=>{const em=$('em').value.trim();if(!em){$('em').focus();return}const r=await c.auth.resetPasswordForEmail(em,{redirectTo:redir+'?reset=1'});say(r.error?vt('lgErr')+A.esc(r.error.message):vt('lgResetSent'),!!r.error)};
+const showReset=()=>{$('fMain').hidden=true;$('fReset').hidden=false;$('pw2').focus()};
+c.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY')showReset()});
+if(/reset=1/.test(location.search)||/type=recovery/.test(location.hash))showReset();
+$('fReset').onsubmit=async e=>{e.preventDefault();const r=await c.auth.updateUser({password:$('pw2').value});if(r.error)return say(vt('lgErr')+A.esc(r.error.message),1);say(vt('lgSaved'));setTimeout(()=>location.href=A.ROOT+'account/',900)};
+const {data}=await c.auth.getSession();if(data.session&&!/reset=1/.test(location.search)&&!/type=recovery/.test(location.hash)){const me=await A.refresh();location.href=me&&!me.onboarded?A.ROOT+'account/?onboard=1':next()}
+document.addEventListener('vpa-lang',mode);})();</script>
+</body></html>
