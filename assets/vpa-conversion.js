@@ -11,10 +11,11 @@
     switch (s.type) {
       case 'identity': return { m: r, sd: opts.reliable === false ? s.sd_unreliable : s.sd_reliable };
       case 'knots': return { m: lerp(s.knots, r), sd: s.sd };
-      case 'knots_by_gender': return { m: lerp(s.knots[gk], r), sd: s.sd };
+      case 'knots_by_gender': { const st = s.start && s.start[gk], fresh = st != null && Math.abs(r - st) < 0.005 && !opts.viaChain && !(opts.matches >= (s.start.min_matches || 5));
+        return { m: lerp(s.knots[gk], r), sd: fresh && s.sd_start ? s.sd_start : s.sd, start: fresh || undefined }; }
       case 'knots_by_gender_sd': { const k = s.knots[gk]; return { m: lerp(k, r), sd: lerp(k.map(p => [p[0], p[2]]), r) }; }
       case 'offset': return { m: r + s.offset, sd: s.sd };
-      case 'via': { const v = toVPA(P, s.via, r, gender); return v && { m: v.m, sd: Math.hypot(v.sd, s.extra_sd) }; }
+      case 'via': { const v = toVPA(P, s.via, r, gender, { viaChain: true }); return v && { m: v.m, sd: Math.hypot(v.sd, s.extra_sd) }; }
     }
   }
   function fromVPA(P, sys, m, gender) {
@@ -70,6 +71,6 @@
     return Object.keys(R).map(p => ({ id: p, level: R[p], matches: N[p], wins: W[p], losses: L[p], provisional: N[p] < E.provisional_matches }))
       .sort((a, b) => b.level - a.level);
   }
-  g.VPA = { toVPA, fromVPA, combine, eligibility, equivalents, rank, load: (base = '') => fetch(base + 'assets/vpa-conversion.json?v=202611030130').then(r => r.json()) };
+  g.VPA = { toVPA, fromVPA, combine, eligibility, equivalents, rank, load: (base = '') => fetch(base + 'assets/vpa-conversion.json?v=202611091130').then(r => r.json()) };
   if (typeof module !== 'undefined') module.exports = g.VPA;
 })(typeof window !== 'undefined' ? window : globalThis);
